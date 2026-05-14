@@ -5,7 +5,7 @@ using namespace std;
 
 
 // проверка является ли символ русским двухбайтовым символом
-int kostil(unsigned char first, unsigned char second) {             // возвращает 1, если это символ кириллицы (2 байтовый)
+int workaround(unsigned char first, unsigned char second) {             // возвращает 1, если это символ кириллицы (2 байтовый)
     // D0 90-BF (А-Я), D0 80-8F (а-п), D1 80-BF (р-я, Ё)            // иначе 0
     // А-Я
     if (first == 0xD0 && second >= 0x90 && second <= 0xBF) return 1;
@@ -41,30 +41,56 @@ setlocale(LC_ALL, "ru_RU.UTF-8");
         int ch = getch();
         if (ch == KEY_BACKSPACE)
         {
-            // if (str != "")
-            // {
-            //     str.erase(str.length()-1, 1);
-            //     getyx(stdscr, y, x);
-            //     move(y, x);
-            //     delch();
+            // if (str != "")           // Первая версия костыля, которая работала только, если строка вся на русском
+            // {                        // работала она при помощи булевого флага
+            //     if (flag == false)       
+            //     {
+            //         str.erase(str.length()-1, 1);
+            //         getyx(stdscr, y, x);
+            //         move(y, x);
+            //         delch();
+            //     }
+            //     else                                    // Если удаляем двухбайтный символ
+            //     {
+            //         str.erase(str.length()-2, 2);
+            //         getyx(stdscr, y, x);
+            //         move(y, x);
+            //         delch();
+            //         // next_ch = 10000;
+            //     }
             // }
             if (str != "")
             {
-                if (flag == false)       
+                int len = str.length();
+                if (len > 1)
+                {
+                    unsigned char first =  str[len - 2];
+                    unsigned char second = str[len - 1];
+
+                    if (workaround(first, second) == 1)       
+                    {
+                        str.erase(str.length()-2, 2);
+                        getyx(stdscr, y, x);
+                        move(y, x);
+                        delch();
+                    }
+                    else                                   
+                    {
+                        str.erase(str.length()-1, 1);
+                        getyx(stdscr, y, x);
+                        move(y, x);
+                        delch();
+                        // next_ch = 10000;
+                    }
+                }
+                else
                 {
                     str.erase(str.length()-1, 1);
                     getyx(stdscr, y, x);
                     move(y, x);
                     delch();
                 }
-                else                                    // Если удаляем двухбайтный символ
-                {
-                    str.erase(str.length()-2, 2);
-                    getyx(stdscr, y, x);
-                    move(y, x);
-                    delch();
-                    // next_ch = 10000;
-                }
+                
             }
 
         }
