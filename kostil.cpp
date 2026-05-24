@@ -29,7 +29,7 @@ setlocale(LC_ALL, "ru_RU.UTF-8");
     keypad(stdscr, TRUE);
     int x, y;
     unsigned char terminals[100] = "";
-    printw("Введите какую нибудь хуйню: ");
+    printw("Введите строку: ");
     string str = "";
     int pred_ch = 0;            // Для хранения предыдущего символа
     int next_ch;
