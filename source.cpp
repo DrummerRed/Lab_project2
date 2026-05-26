@@ -1,6 +1,8 @@
 #include "header.h"
 
 const string HELP = "help.txt";     // Название файла для вкладки "Помощь"
+const int OPERATING_MODE = 1;       // Флаг для режима работы
+const int INPUT_MODE = 2;           // Флаг для режима ввода
 
 void Menu(char* argv[])         // Главное меню программы
 {
@@ -39,11 +41,12 @@ void Menu(char* argv[])         // Главное меню программы
             }
             if (switcher == 2)
             {
-                Menu_for_record();
+                Menu_start_work();
             }
             if (switcher == 3)
             {
                 endwin();
+                system("clear");
                 exit(0);
             }
         }
@@ -99,27 +102,58 @@ void Help()             // Функция работы пункта меню "П
     }
 }
 
-void Menu_for_record()                              // Меню пункта "Начать работу"
-{
-    int choice = choose_mode();
+void Menu_start_work()                              // Меню пункта "Начать работу"
+{                                                           // Для того чтобы не выходить сразу вменю из второго выбора можно организовать цикл
+    int choice_operating = 0;
+    while(choice_operating != -1)
+    {
+        choice_operating = choose_operating_mode();         // Выбор режима работы (клавиатура/чтение файла)
 
-    if (choice == -1)
-        return;
-    else if (choice == 0)
-        record_for_console();
+        if (choice_operating == -1)
+            break;
+            
+        else if (choice_operating == 0)                     // Выбор режима "Ввод с клавиатуры"
+        {
+            if (Menu_input_for_keyboard() == -1)
+                continue;
+        }
+    }
 }
 
-int choose_mode()                                  // Выбор режима работы программы
-{                                                   // Возвращает 0 при записи с консоли, 1 при чтении с файла
-    int index = 0;                                  // либо возвращает -1 при нажатии Esc
-    while(true)
+int Menu_input_for_keyboard()                      // Меню ввода с клавиатуры
+{
+    int choice_input = 0;
+    while(choice_input != -1)
+    {
+        choice_input = choose_input_mode();     // Выбор режима работы с записями (добавление/удаление)
+
+        if (choice_input == 0)                      // Ввод произведений
+        {
+            string composition = record_composition();
+            if (composition == "")
+                continue;
+        }
+        if (choice_input == 1)                      // Ввод авторов
+        {
+            string author = record_authors();
+            if (author == "")
+                continue;
+        }
+    }
+    return choice_input;
+}
+
+int choose_operating_mode()                         // Выбор режима работы программы
+{                                                   //  Возвращает 0 при выборе "Ввод с клавиатуры",
+    int index = 0;                                  // 1 при выборе "Чтение из файла", 2 при выборе "Просмотр записей"
+    while(true)                                     // либо возвращает -1 при нажатии Esc
     {    
         clear();
         printw("Для возвращения в меню нажмите Esc\n");
         printw("----------------------------------\n\n");
         printw("Выберите режим работы:\n\n");
-        string variants[2] = {"Ввод с клавиатуры", "Чтение из файла"};
-        for (int i=0; i<2; i++)
+        string variants[3] = {"Ввод с клавиатуры", "Чтение из файла", "Просмотр записей"};
+        for (int i=0; i<3; i++)
         {
             if (i == index)
                 printw("<< %s >>\n", variants[i].c_str());
@@ -128,12 +162,19 @@ int choose_mode()                                  // Выбор режима р
         }
         refresh();
         int ch = getch();
-        if ((ch == 258) || (ch == 259))
+        if (ch == 258)
+        {
+            if (index == 2)
+                index = 0;
+            else
+                index++;
+        }
+        if (ch == 259)
         {
             if (index == 0)
-                index = 1;
-            else
-                index = 0;
+                index = 2;
+            else 
+                index--;
         }
         if (ch == 10)                       
             return index;
@@ -143,26 +184,98 @@ int choose_mode()                                  // Выбор режима р
     }
 }
 
-void record_for_console()
-{
+int choose_input_mode()                             // Выбор режима ввода
+{                                                   // Возвращает 0 при записи с консоли, 1 при чтении с файла
+    int index = 0;                                  // либо возвращает -1 при нажатии Esc
     while(true)
+    {    
+        clear();
+        printw("Для возвращения нажмите Esc\n");
+        printw("---------------------------\n\n");
+        printw("Выберите:\n\n");
+        string variants[4] = {"Добавление произведений", "Добавление авторов", "Просмотр и удаление произведений", "Просмотр и удаление авторов"};
+        for (int i=0; i<4; i++)
+        {
+            if (i == index)
+                printw("<< %s >>\n", variants[i].c_str());
+            else 
+                printw(" %s \n", variants[i].c_str());
+        }
+        refresh();
+        int ch = getch();
+        if (ch == 258)
+        {
+            if (index == 3)
+                index = 0;
+            else
+                index++;
+        }
+        if (ch == 259)
+        {
+            if (index == 0)
+                index = 3;
+            else
+                index--;
+        }
+        if (ch == 10)                       
+            return index;
+
+        if (ch == 27)
+            return -1;
+    }
+}
+
+string record_composition()                           // Ввод названия произведений
+{                                                     // Возвращает пустую строку при нажатии Esc
+    bool flag_esc = false; 
+    string composition;                                     
+    for (int i=0; flag_esc!=true; i++)
     {
         clear();
-        printw("Для возвращения в меню нажмите Esc\n");
-        printw("----------------------------------\n\n");
+        printw("Для возвращения нажмите Esc\n");
+        printw("---------------------------\n\n");
+        if (i>0)
+        {
+            printw("Произведение «%s» успешно записано\n", composition.c_str());
+        }
         printw("Введите название произведения: ");
-        bool flag_esc = false;
-        string book = input_string(&flag_esc);
+
+        composition = input_string(&flag_esc);
 
         if (flag_esc)
-            return;
-        else                ///////
-            {printw("%s\n", book.c_str());
-                refresh();
-            sleep(3);
-        }
-
+            composition = "";
+        
+        // добавить проверку на пустую строку
+        // для этого можно добавить флаг, при включении который будет срабатывать в условии
     }
+    return composition;
+}
+
+string record_authors()                               // Ввод авторов
+{                                                     // Возвращает пустую строку при нажатии Esc
+    bool flag_esc = false; 
+    string author;                                     
+    for (int i=0; flag_esc!=true; i++)
+    {
+        clear();
+        printw("Для возвращения нажмите Esc\n");
+        printw("---------------------------\n\n");
+        if (i>0)
+        {
+            printw("Автор «%s» успешно записан\n", author.c_str());
+        }
+        printw("Введите автора: ");
+
+        author = input_string(&flag_esc);
+
+        if (flag_esc)
+            author = "";
+        
+        // добавить проверку на пустую строку
+        // для этого можно добавить флаг, при включении который будет срабатывать в условии
+        // добавить проверку на цифры
+    }
+    return author;
 }
 
 string input_string(bool* flag_esc)                   // Ввод строки

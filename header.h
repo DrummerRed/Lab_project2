@@ -17,9 +17,13 @@ void interface(int choice);     // Отрисовка интерфейса гл�
 
 void Help();                    // Функция работы пункта меню "Помощь"
 
-void Menu_for_record();                              // Меню пункта "Начать работу"
-int choose_mode();                                  // Выбор режима работы программы
+void Menu_start_work();                              // Меню пункта "Начать работу"
+int Menu_input_for_keyboard();                         // Меню ввода с клавиатуры
+// int choose_mode();                                  // Выбор режима работы программы
+int choose_operating_mode();
+int choose_input_mode();
 string input_string(bool* flag_esc);                   // Ввод строки
 int workaround(unsigned char first, unsigned char second);
 
-void record_for_console();
+string record_composition();                           // Ввод произведений
+string record_authors();                               // Ввод авторов
