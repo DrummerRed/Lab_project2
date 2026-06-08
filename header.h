@@ -10,7 +10,13 @@
 // #include <wchar.h>
 
 using namespace std;
- 
+
+struct author;
+struct composition;
+void add_composition(string composition_name);           // Добавление произведений в список
+void viewing_compositions();
+int search_composition(string composition_name);         // Поиск заданного произведения
+void delete_composition(int index);
 
 void Menu(char* argv[]);        // Главное меню программы
 void interface(int choice);     // Отрисовка интерфейса главного меню программы

@@ -1,4 +1,5 @@
 #include "header.h"
+#include "list.cpp"
 
 const string HELP = "help.txt";     // Название файла для вкладки "Помощь"
 const int OPERATING_MODE = 1;       // Флаг для режима работы
@@ -116,6 +117,7 @@ void Menu_start_work()                              // Меню пункта "Н
         {
             if (Menu_input_for_keyboard() == -1)
                 continue;
+            // Menu_input_for_keyboard();
         }
     }
 }
@@ -127,17 +129,23 @@ int Menu_input_for_keyboard()                      // Меню ввода с к�
     {
         choice_input = choose_input_mode();     // Выбор режима работы с записями (добавление/удаление)
 
-        if (choice_input == 0)                      // Ввод произведений
+        if (choice_input == 0)                      // Добавление произведений
         {
             string composition = record_composition();
             if (composition == "")
                 continue;
         }
-        if (choice_input == 1)                      // Ввод авторов
+        if (choice_input == 1)                      // Добавление авторов
         {
             string author = record_authors();
             if (author == "")
                 continue;
+        }
+        if (choice_input == 2)                      // Просмотр и удаление произведений 
+        {
+            viewing_compositions();
+            // if (author == "")
+            //     continue;
         }
     }
     return choice_input;
@@ -184,7 +192,7 @@ int choose_operating_mode()                         // Выбор режима �
     }
 }
 
-int choose_input_mode()                             // Выбор режима ввода
+int choose_input_mode()                             // Выбор режима ввода с клавиатуры
 {                                                   // Возвращает 0 при записи с консоли, 1 при чтении с файла
     int index = 0;                                  // либо возвращает -1 при нажатии Esc
     while(true)
@@ -245,8 +253,12 @@ string record_composition()                           // Ввод названи
         if (flag_esc)
             composition = "";
         
+        else
+            add_composition(composition);
+        
         // добавить проверку на пустую строку
         // для этого можно добавить флаг, при включении который будет срабатывать в условии
+        // !!! добавить проверку на повторяющиеся произведения
     }
     return composition;
 }
@@ -254,19 +266,49 @@ string record_composition()                           // Ввод названи
 string record_authors()                               // Ввод авторов
 {                                                     // Возвращает пустую строку при нажатии Esc
     bool flag_esc = false; 
-    string author;                                     
+    bool item_find = true;
+    string author;  
+    string composition;                                   
     for (int i=0; flag_esc!=true; i++)
     {
+        int index;
         clear();
         printw("Для возвращения нажмите Esc\n");
         printw("---------------------------\n\n");
         if (i>0)
         {
-            printw("Автор «%s» успешно записан\n", author.c_str());
+            if (item_find)
+                printw("Автор «%s» успешно записан\n", author.c_str());
+            else
+            {
+                printw("Данное произведение не найдено!\n");
+                item_find = true;
+            }
         }
-        printw("Введите автора: ");
 
-        author = input_string(&flag_esc);
+        printw("Укажите произведение, к которому хотите добавить автора: ");
+        composition = input_string(&flag_esc);
+        if (flag_esc)
+        {
+            author = "";
+            break;
+        }
+        else
+            index = search_composition(composition);
+
+        if (index > 0)
+        {
+            clear();
+            printw("Для возвращения нажмите Esc\n");
+            printw("---------------------------\n\n");
+            printw("Введите автора: ");
+            author = input_string(&flag_esc);
+        }
+        else
+        {
+            item_find = false;          // Произведение не найдено
+            continue;
+        }
 
         if (flag_esc)
             author = "";
