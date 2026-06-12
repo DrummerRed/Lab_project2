@@ -1,5 +1,4 @@
 #include "header.h"
-#include "list.cpp"
 
 const string HELP = "help.txt";     // Название файла для вкладки "Помощь"
 const int OPERATING_MODE = 1;       // Флаг для режима работы
@@ -119,6 +118,12 @@ void Menu_start_work()                              // Меню пункта "Н
                 continue;
             // Menu_input_for_keyboard();
         }
+
+
+        else if (choice_operating == 2)                     // Выбор режима "Просмотр записей"
+        {
+            show_list();
+        }
     }
 }
 
@@ -146,6 +151,10 @@ int Menu_input_for_keyboard()                      // Меню ввода с к�
             viewing_compositions();
             // if (author == "")
             //     continue;
+        }
+        if (choice_input == 3)                      // Просмотр и удаление авторов
+        {
+            viewing_authors();
         }
     }
     return choice_input;
@@ -303,6 +312,7 @@ string record_authors()                               // Ввод авторов
             printw("---------------------------\n\n");
             printw("Введите автора: ");
             author = input_string(&flag_esc);
+            add_author(index, author);
         }
         else
         {

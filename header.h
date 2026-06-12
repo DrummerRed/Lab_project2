@@ -17,6 +17,9 @@ void add_composition(string composition_name);           // Добавление
 void viewing_compositions();
 int search_composition(string composition_name);         // Поиск заданного произведения
 void delete_composition(int index);
+void add_author(int index, string author_name);                  // Добавление автора
+void show_list();                            // Вывод всего списка
+void viewing_authors();              // Просмотр и удаление авторов  
 
 void Menu(char* argv[]);        // Главное меню программы
 void interface(int choice);     // Отрисовка интерфейса главного меню программы
