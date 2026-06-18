@@ -20,6 +20,10 @@ void delete_composition(int index);
 void add_author(int index, string author_name);                  // Добавление автора
 void show_list();                            // Вывод всего списка
 void viewing_authors();              // Просмотр и удаление авторов  
+void search_authors(int index);                   // Поиск авторов для заданного произведения
+int delete_author_interface(composition* ptr);              // Вывод списка авторов произведения для удаления
+void delete_author(int index, composition* ptr);         // Удаление авторов
+int count_authors(composition* ptr);             // подсчет поличества авторов
 
 void Menu(char* argv[]);        // Главное меню программы
 void interface(int choice);     // Отрисовка интерфейса главного меню программы

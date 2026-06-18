@@ -62,17 +62,17 @@ void delete_composition(int index)          /// Стоит допсисать о
                 prev_ptr = prev_ptr->next_ptr;
             }
         }
-            next_ptr = ptr->next_ptr;
-            if (next_ptr == nullptr)                // Удаление последнего эдемента
-            {
-                prev_ptr->next_ptr = nullptr;
-                delete ptr;
-            }
-            else                                    // Удаление элемента из середины списка
-            {
-                prev_ptr->next_ptr = next_ptr;
-                delete ptr;
-            }
+        next_ptr = ptr->next_ptr;
+        if (next_ptr == nullptr)                // Удаление последнего элемента
+        {
+            prev_ptr->next_ptr = nullptr;
+            delete ptr;
+        }
+        else                                    // Удаление элемента из середины списка
+        {
+            prev_ptr->next_ptr = next_ptr;
+            delete ptr;
+        }
     }
     
 }
@@ -155,8 +155,6 @@ void add_author(int index, string author_name)                  // Добавл�
         ptr = ptr->next_ptr;
     
     author* author_ptr = ptr->author_ptr;
-    // while(author_ptr != nullptr)
-    //     author_ptr = author_ptr->next_ptr;
     if (author_ptr == nullptr)
     {
         ptr->author_ptr = new author;
@@ -169,9 +167,6 @@ void add_author(int index, string author_name)                  // Добавл�
         author_ptr->next_ptr = new author;
         author_ptr->next_ptr->name = author_name; 
     }
-
-    // author_ptr = new author;
-    // author_ptr->name = author_name;
 }
 
 void show_list()                            // Вывод всего списка
@@ -268,8 +263,8 @@ void viewing_authors()              // Просмотр и удаление ав
             if (!flag_esc)
             {
                 int index = stoi(cash);
-                if ((index > 0) && (index <=iterator))
-                    delete_composition(index);
+                if ((index > 0) && (index <= iterator))
+                    search_authors(index);
             }
             
 
@@ -278,7 +273,124 @@ void viewing_authors()              // Просмотр и удаление ав
     }
 }
 
-void delete_author(int index)
+void search_authors(int index)                   // Поиск авторов для заданного произведения
 {
+    int count_authors = 0;
+    composition* ptr = head_ptr;
+
+    for (int i=1; i<index; i++)
+        ptr = ptr->next_ptr;
     
+    // author* author_ptr = ptr->author_ptr;
+    // if (author_ptr == nullptr)
+    //     count_authors = 0;
+    // else
+    // {
+    //     while(author_ptr != nullptr)
+    //     {
+    //         count_authors++;
+    //         author_ptr = author_ptr->next_ptr;
+    //     }
+    // }
+
+    // author_ptr = ptr->author_ptr;
+    delete_author_interface(ptr);
+}
+
+int delete_author_interface(composition* ptr)              // Вывод списка авторов произведения для удаления
+{ 
+    bool flag_esc = false;
+    while(!flag_esc)
+    {
+        author* author_ptr = ptr->author_ptr;
+        int authors = count_authors(ptr);
+        clear();
+        printw("Для возвращения нажмите Esc\n");
+        printw("---------------------------\n\n");
+
+        if (authors == 0)
+        {
+            printw("У данного произведения отсутствуют авторы.");
+            int ch = getch();
+            if (ch == 27)
+                break;
+        }
+        else
+        {
+            author* tmp_author_ptr = author_ptr;
+            for (int i=1; i<=authors; i++)
+            {
+                string author_name = tmp_author_ptr->name;
+                printw("%d. %s\n", i, author_name.c_str());
+
+                if (i != authors)
+                    tmp_author_ptr = tmp_author_ptr->next_ptr;
+            }
+
+            printw("\nДля удаления желаемого автора введите его номер: ");
+            string cash = input_string(&flag_esc);
+            if (!flag_esc)
+            {
+                int index = stoi(cash);
+                if ((index > 0) && (index <= authors))
+                {
+                    delete_author(index, ptr);
+                }
+            }
+        }
+    }
+
+    return 0; /////////////
+}
+
+void delete_author(int index, composition* ptr)         // Удаление авторов
+{
+    author* author_ptr = ptr->author_ptr;
+    author* next_author_ptr;
+    author* prev_author_ptr;
+
+    if (index == 1)                                     // Удаление первого элемента
+    {
+        next_author_ptr = ptr->author_ptr->next_ptr;
+        ptr->author_ptr = next_author_ptr;
+        delete author_ptr;
+    }
+    else
+    {
+        for (int i=1; i<index; i++)
+        {
+            prev_author_ptr = author_ptr;
+            author_ptr = author_ptr->next_ptr;
+        }
+
+        next_author_ptr = author_ptr->next_ptr;
+        if (next_author_ptr == nullptr)                 // Удаление последнего элемента
+        {
+            prev_author_ptr->next_ptr = nullptr;
+            delete author_ptr;
+        }
+        else                                            // Удаление элемента из середины
+        {
+            prev_author_ptr->next_ptr = next_author_ptr;
+            delete author_ptr;
+        }
+
+    }
+}
+
+int count_authors(composition* ptr)             // подсчет поличества авторов
+{
+    int count_authors = 0;
+    author* author_ptr = ptr->author_ptr;
+    if (author_ptr == nullptr)
+        count_authors = 0;
+    else
+    {
+        while(author_ptr != nullptr)
+        {
+            count_authors++;
+            author_ptr = author_ptr->next_ptr;
+        }
+    }
+    return count_authors;
 }
