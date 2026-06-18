@@ -119,6 +119,10 @@ void Menu_start_work()                              // Меню пункта "Н
             // Menu_input_for_keyboard();
         }
 
+        else if (choice_operating == 1)                     // Выбор режима "Чтение из файла"
+        {
+            file_reader_interface();                    
+        }
 
         else if (choice_operating == 2)                     // Выбор режима "Просмотр записей"
         {

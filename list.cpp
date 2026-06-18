@@ -15,6 +15,14 @@ struct author
 
 composition* head_ptr = nullptr;            // Глобальный указатель на начало списка
 
+bool list_is_empty()                        // Проверка списка на содержание элементов
+{                                           // Возвращает true, если список пуст
+    if (head_ptr == nullptr)                // Иначе возвращает false
+        return true;
+    else
+        return false;
+}
+
 void add_composition(string composition_name)           // Добавление произведений в список
 {
     if (head_ptr == nullptr)
@@ -35,7 +43,7 @@ void add_composition(string composition_name)           // Добавление 
     }
 }
 
-void delete_composition(int index)          /// Стоит допсисать освобождение памяти авторов
+void delete_composition(int index)          /// Стоит дописать освобождение памяти авторов
 {
     composition* ptr = head_ptr;
     composition* next_ptr;
@@ -75,6 +83,14 @@ void delete_composition(int index)          /// Стоит допсисать о
         }
     }
     
+}
+
+void clearing_list()                    // Очистка списка
+{
+    int first_elem = 1;
+
+    while(list_is_empty() == false)
+        delete_composition(first_elem);
 }
 
 void viewing_compositions()             // Пока как отладочный принт
