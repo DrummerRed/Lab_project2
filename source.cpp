@@ -124,7 +124,12 @@ void Menu_start_work()                              // Меню пункта "Н
             file_reader_interface();                    
         }
 
-        else if (choice_operating == 2)                     // Выбор режима "Просмотр записей"
+        else if (choice_operating == 2)                     // Выбор режима "Сохранение в файл"
+        {
+            file_creator_interface();                  
+        }
+
+        else if (choice_operating == 3)                     // Выбор режима "Просмотр записей"
         {
             show_list();
         }
@@ -173,8 +178,8 @@ int choose_operating_mode()                         // Выбор режима �
         printw("Для возвращения в меню нажмите Esc\n");
         printw("----------------------------------\n\n");
         printw("Выберите режим работы:\n\n");
-        string variants[3] = {"Ввод с клавиатуры", "Чтение из файла", "Просмотр записей"};
-        for (int i=0; i<3; i++)
+        string variants[4] = {"Ввод с клавиатуры", "Чтение из файла", "Сохранение в файл", "Просмотр записей"};
+        for (int i=0; i<4; i++)
         {
             if (i == index)
                 printw("<< %s >>\n", variants[i].c_str());
@@ -185,7 +190,7 @@ int choose_operating_mode()                         // Выбор режима �
         int ch = getch();
         if (ch == 258)
         {
-            if (index == 2)
+            if (index == 3)
                 index = 0;
             else
                 index++;
@@ -193,7 +198,7 @@ int choose_operating_mode()                         // Выбор режима �
         if (ch == 259)
         {
             if (index == 0)
-                index = 2;
+                index = 3;
             else 
                 index--;
         }

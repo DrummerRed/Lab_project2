@@ -297,19 +297,6 @@ void search_authors(int index)                   // Поиск авторов д
     for (int i=1; i<index; i++)
         ptr = ptr->next_ptr;
     
-    // author* author_ptr = ptr->author_ptr;
-    // if (author_ptr == nullptr)
-    //     count_authors = 0;
-    // else
-    // {
-    //     while(author_ptr != nullptr)
-    //     {
-    //         count_authors++;
-    //         author_ptr = author_ptr->next_ptr;
-    //     }
-    // }
-
-    // author_ptr = ptr->author_ptr;
     delete_author_interface(ptr);
 }
 
@@ -409,4 +396,39 @@ int count_authors(composition* ptr)             // подсчет поличес
         }
     }
     return count_authors;
+}
+
+void output_file_creator(string file_name)                              // Запись списка в файл              
+{
+    ofstream file;
+    file.open(file_name);
+    if (file.is_open())
+    {
+        composition* ptr = head_ptr;
+        int iterator = 0;
+
+        while(ptr != nullptr)
+            {
+                iterator++;
+                string composition_name = ptr->name;
+                file << iterator << ". " << composition_name;
+
+                author* author_ptr = ptr->author_ptr;
+                int number = 0;
+                while(author_ptr != nullptr)
+                {
+                    number++;
+                    string author_name = author_ptr->name;
+                    if (number == 1)
+                        file << " - " << author_name;
+                    else
+                        file << ", " << author_name;
+
+                    author_ptr = author_ptr->next_ptr;
+                }
+                ptr = ptr->next_ptr;
+                if (ptr != nullptr)
+                    file << endl;
+            }
+    }
 }

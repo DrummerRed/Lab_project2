@@ -6,7 +6,7 @@ void file_reader_interface()                    // Выбор режима "Чт
     int choice = 0;
     while(!flag_esc)
     {
-        bool empty = list_is_empty();
+        bool empty = list_is_empty();               // Проверка списка на содержание элементов
         clear();
 
         if (empty == false)
@@ -46,6 +46,7 @@ void file_reader_interface()                    // Выбор режима "Чт
             else
             {
                 // какая то логика...
+                interface_of_parsing(file_name);
                 flag_esc = true;
             }
         }
@@ -89,9 +90,9 @@ string file_name_input()                            // Считывание им
 int file_checker(string file_name)       // Функция проверки существования рабочего файла программы
 {                                         // Возвращает 1, если файл с таким именем отсутствует
     ifstream file;                        // 2, если файл пуст
-    file.open(file_name);        
+    file.open(file_name);                   // 0, если файл полностью корректен
 
-    if (!file.is_open())                  // 0, если файл полностью корректен
+    if (!file.is_open())                  
         return 1;
     else                                    // Добавить проверку на структуру файла
     {
@@ -107,4 +108,212 @@ int file_checker(string file_name)       // Функция проверки су
         file.close();
         return flag;
     }
+}
+
+int string_counter(string file_name)                    // Подсчет количества строк в файле
+{                                                       // Возвращает количество строк
+    string buffer;                                      // При ошибке открытия файла возвращает -1
+    int counter = 0;    
+
+    ifstream file;
+    file.open(file_name);
+    if (!file.is_open())                  
+        counter = -1;
+    else
+    {
+        while(getline(file, buffer))
+            counter++;
+        file.close();
+    }
+    return counter;             // А нужна ли эта функция вообще???
+}
+
+int file_parser(string file_name)                       // Парсинг входного файла
+{                                                       // Возвращает 1 при ошибке открытия файла
+    ifstream file;                                      // Возвращает 2 при некорректной структуре файла
+    file.open(file_name);                               // Возвращает 0 при успешном завершении
+
+    if (!file.is_open())                  
+        return 1;
+    else
+    {
+        string str;
+        string composition;
+        string author;
+        int compos_counter = 0;
+        while(getline(file, str))
+        {
+            compos_counter++;
+
+            if (str[0] == '[')
+            {
+                int len = str.length();
+                for (int i=0; i<len; i++)
+                {
+                    if (str[i] == ']')
+                    {
+                        composition = str;
+                        composition.erase(i, (len-i));
+                        composition.erase(0, 1);
+
+                        author = str;
+                        author.erase(0, i+1);
+                        break;
+                    }
+                }
+                add_composition(composition);
+                
+                if (len > author.length())                  // Если автор присутствует
+                {
+                    for (int i=0; ; i++)       // Удаление пробелов
+                    {
+                        if (author[i] != ' ')
+                        {
+                            author.erase(0, i);
+                            break;
+                        }
+                    }
+                    authors_parser(compos_counter, author);
+                }
+            }
+            else
+                return 2;      // неправильная структура файла
+        }
+        return 0;          
+    }
+}
+
+void authors_parser(int index, string str)              // парсинг авторов
+{
+    string author;
+    while(str != "")
+    {
+        author = str;
+        int i = 0;
+        for (; i<author.length(); i++)
+        {
+            if ((str[i] == ' '))
+            {
+                author.erase(i, author.length()-i);
+                i++;
+                break;
+            }
+        }
+        
+        add_author(index, author);
+        str.erase(0, i);
+
+        // printw("%ld\n", str.length());           // Отладочный принт
+        // refresh();
+        // sleep(3);
+    }
+}
+
+void interface_of_parsing(string file_name)                     // Функция показа сообщения о завершении парсинга
+{
+    int result = file_parser(file_name);
+    int ch = 0;
+    while(ch != 27)
+    {
+        clear();
+        printw("Для возвращения нажмите Esc\n");
+        printw("---------------------------\n\n");
+
+        if (result == 0)
+            printw("Файл успешно считан");
+        else if (result == 1)
+            printw("Ошибка! Не удалось открыть файл");
+        else if (result == 2)
+            printw("Ошибка! Файл имеет некорректную структуру! Отредактируйте данный файл или выберите другой");
+
+        ch = getch();
+        refresh();
+    }
+}
+
+string file_name_output()                            // Считывание имени выходного файла
+{                                                   // Возвращает имя файл, если такое имя корректно
+    bool flag_esc = false;                          // При выходе по ESC возвращает пустую строку
+    int checker = 1;
+    string file_name;
+    while(!flag_esc)
+    {
+        clear();
+        printw("Для возвращения нажмите Esc\n");
+        printw("---------------------------\n\n");
+
+        if (checker != 1)
+            printw("Ошибка! Файл с данным названием уже существует! Выберите другое имя файла!\n");
+        
+        printw("Введите имя файла: ");
+
+        file_name = input_string(&flag_esc);
+
+        if (flag_esc)
+            file_name = "";
+        else
+        {
+            checker = file_checker(file_name);
+            
+            if (checker == 1)
+                flag_esc = true;
+        }
+    }
+    return file_name;
+}
+
+void file_creator_interface()                      // Меню создания выходного файла
+{
+    bool empty = list_is_empty();               // Проверка на пустоту списка
+    bool flag_esc = false;
+
+    while(!flag_esc)
+    {
+        clear();
+        printw("Для возвращения нажмите Esc\n");
+        printw("---------------------------\n\n");
+
+        if (empty)                              // Список пуст
+        {
+            printw("Записи о произведениях отсутствуют, сохранение недоступно");
+            int ch = getch();
+            if (ch == 27)
+                flag_esc = true;
+        }
+        else
+        {
+            string file_name = file_name_output();
+
+            if (file_name != "")
+            {
+                output_file_creator(file_name);
+                flag_esc = true;
+                output_file_info(file_name);
+            }
+            else
+                flag_esc = true;
+        }
+    }
+}
+
+void output_file_info(string file_name)                     // Вывод информации о записанном файле
+{
+    clear();
+    printw("Для возвращения нажмите Esc\n");
+    printw("---------------------------\n\n");
+    
+    char absolute_path[PATH_MAX];
+    string dir_name = "";
+    if (realpath(file_name.c_str(), absolute_path))       // Преобразует относительный путь в абсолютный
+    {
+        printw("Данные были успешно записаны в файл\n\n");
+        printw("Имя файла:\t%s\n", file_name.c_str());
+        printw("Путь до файла:\t%s", absolute_path);
+    }
+    else 
+        printw("Ошибка! Файл не был загружен!\n");
+
+    int ch = 0;
+    while(ch != 27)
+        ch = getch();
 }

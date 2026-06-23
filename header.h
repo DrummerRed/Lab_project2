@@ -26,6 +26,7 @@ int delete_author_interface(composition* ptr);              // Вывод спи
 void delete_author(int index, composition* ptr);         // Удаление авторов
 int count_authors(composition* ptr);             // подсчет поличества авторов
 void clearing_list();                        // Очистка списка
+void output_file_creator(string file_name);                              // Запись списка в файл 
 
 void Menu(char* argv[]);        // Главное меню программы
 void interface(int choice);     // Отрисовка интерфейса главного меню программы
@@ -43,3 +44,10 @@ string record_authors();                               // Ввод авторо�
 void file_reader_interface();                    // Выбор режима "Чтение из файла"
 string file_name_input();                            // Считывание имени файла
 int file_checker(string file_name);                // Функция проверки существования рабочего файла программы
+int string_counter(string file_name);                    // Подсчет количества строк в файле
+int file_parser(string file_name);                       // Парсинг входного файла
+void authors_parser(int index, string str);              // парсинг авторов
+void interface_of_parsing(string file_name);                     // Функция показа сообщения о завершении парсинга
+string file_name_output();                            // Считывание имени выходного файла
+void file_creator_interface();                      // Меню создания выходного файла
+void output_file_info(string file_name);                     // Вывод информации о записанном файле
