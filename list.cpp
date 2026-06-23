@@ -94,8 +94,10 @@ void clearing_list()                    // Очистка списка
 }
 
 void viewing_compositions()             // Пока как отладочный принт
-{                                       // Добавить удаление
+{                                       
     bool flag_esc = false;
+    bool flag_empty = false;
+    bool flag_error = false;            // сократить код!
     while(!flag_esc)
     {
         clear();
@@ -120,16 +122,39 @@ void viewing_compositions()             // Пока как отладочный 
                 printw("%d. %s\n", iterator, name.c_str());
                 ptr = ptr->next_ptr;
             }
+            if (flag_empty)
+            {
+                printw("\nОшибка! Введена пустая строка!");
+                flag_empty = false;
+            }
+            if (flag_error)
+            {
+                printw("\nОшибка! Некорректный ввод!");
+                flag_error = false;
+            }
+
             printw("\nДля удаления произведения введите его номер: ");
             string cash = input_string(&flag_esc);
             if (!flag_esc)
             {
-                int index = stoi(cash);
-                if ((index > 0) && (index <=iterator))
-                    delete_composition(index);
+                if (cash == "")
+                    flag_empty = true;
+                else 
+                {
+                    try
+                    {
+                        int index = stoi(cash);
+                        if ((index > 0) && (index <=iterator))
+                            delete_composition(index);
+                        else
+                            flag_error = true;
+                    }
+                    catch(...)
+                    {
+                        flag_error = true;
+                    }
+                }
             }
-                ////else/////////////////
-
         }
         refresh();
     }
@@ -227,13 +252,14 @@ void show_list()                            // Вывод всего списк�
         }
 
     ch = getch();
-    
     }
 }             
 
 void viewing_authors()              // Просмотр и удаление авторов       
 {                                       
     bool flag_esc = false;
+    bool flag_empty = false;
+    bool flag_error = false;        // сократить код!
     while(!flag_esc)
     {
         clear();
@@ -273,17 +299,39 @@ void viewing_authors()              // Просмотр и удаление ав
                 ptr = ptr->next_ptr;
                 printw("\n");
             }
+            if (flag_empty)
+            {
+                printw("\nОшибка! Введена пустая строка!");
+                flag_empty = false;
+            }
+            if (flag_error)
+            {
+                printw("\nОшибка! Некорректный ввод!");
+                flag_error = false;
+            }
 
             printw("\nДля удаления автора введите номер его произведения: ");
             string cash = input_string(&flag_esc);
             if (!flag_esc)
             {
-                int index = stoi(cash);
-                if ((index > 0) && (index <= iterator))
-                    search_authors(index);
+                if (cash == "")
+                    flag_empty = true;
+                else
+                {
+                    try
+                    {
+                        int index = stoi(cash);
+                        if ((index > 0) && (index <= iterator))
+                            search_authors(index);
+                        else
+                            flag_error = true;
+                    }
+                    catch(...)
+                    {
+                        flag_error = true;
+                    }
+                }
             }
-            
-
         }
         refresh();
     }
@@ -303,6 +351,8 @@ void search_authors(int index)                   // Поиск авторов д
 int delete_author_interface(composition* ptr)              // Вывод списка авторов произведения для удаления
 { 
     bool flag_esc = false;
+    bool flag_empty = false;
+    bool flag_error = false;                // сократить код!
     while(!flag_esc)
     {
         author* author_ptr = ptr->author_ptr;
@@ -329,15 +379,38 @@ int delete_author_interface(composition* ptr)              // Вывод спи�
                 if (i != authors)
                     tmp_author_ptr = tmp_author_ptr->next_ptr;
             }
+            if (flag_empty)
+            {
+                printw("\nОшибка! Введена пустая строка!");
+                flag_empty = false;
+            }
+            if (flag_error)
+            {
+                printw("\nОшибка! Некорректный ввод!");
+                flag_error = false;
+            }
 
             printw("\nДля удаления желаемого автора введите его номер: ");
             string cash = input_string(&flag_esc);
             if (!flag_esc)
             {
-                int index = stoi(cash);
-                if ((index > 0) && (index <= authors))
+                if (cash == "")
+                    flag_empty = true;
+                else
                 {
-                    delete_author(index, ptr);
+                    try
+                    {
+                        int index = stoi(cash);
+                        if ((index > 0) && (index <= authors))
+                            delete_author(index, ptr);
+        
+                        else
+                            flag_error = true;
+                    }
+                    catch(...)
+                    {
+                        flag_error = true;
+                    }
                 }
             }
         }
