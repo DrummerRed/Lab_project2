@@ -473,29 +473,33 @@ int count_authors(composition* ptr)             // подсчет поличес
 
 void output_file_creator(string file_name)                              // Запись списка в файл              
 {
+    const int MAX_NAME_LEN = 33;         // + 2 скобки + еще один пробел
     ofstream file;
     file.open(file_name);
     if (file.is_open())
     {
         composition* ptr = head_ptr;
-        int iterator = 0;
+        // int iterator = 0;
 
         while(ptr != nullptr)
             {
-                iterator++;
+                // iterator++;
                 string composition_name = ptr->name;
-                file << iterator << ". " << composition_name;
+                int length_str = count_symbols(composition_name);
+                file << "[" << composition_name << "]";
+                file << string(MAX_NAME_LEN - length_str, ' ');
 
                 author* author_ptr = ptr->author_ptr;
-                int number = 0;
+                // int number = 0;
                 while(author_ptr != nullptr)
                 {
-                    number++;
+                    // number++;
                     string author_name = author_ptr->name;
-                    if (number == 1)
-                        file << " - " << author_name;
-                    else
-                        file << ", " << author_name;
+                    // if (number == 1)
+                    //     file << " - " << author_name;
+                    // else
+                    //     file << ", " << author_name;
+                    file << " " << author_name;             /// изменил вместо комментариев
 
                     author_ptr = author_ptr->next_ptr;
                 }
@@ -504,4 +508,25 @@ void output_file_creator(string file_name)                              // За�
                     file << endl;
             }
     }
+}
+
+int count_symbols(string str)                   // Подсчет количества символов в строке
+{
+    int count = 0;
+    
+    for (int i=0; i < str.length(); i++)
+    {
+        if (i < str.length() - 1)
+        {
+            unsigned char first = str[i];
+            unsigned char second = str[i+1];
+
+            if (workaround(first, second) == 1)
+                i++;
+        }
+
+        count++;
+    }
+
+    return count;
 }

@@ -254,13 +254,19 @@ int choose_input_mode()                             // Выбор режима �
 string record_composition()                           // Ввод названия произведений
 {                                                     // Возвращает пустую строку при нажатии Esc
     bool flag_esc = false; 
+    bool flag_error = false;
     string composition;                                     
     for (int i=0; flag_esc!=true; i++)
     {
         clear();
         printw("Для возвращения нажмите Esc\n");
         printw("---------------------------\n\n");
-        if (i>0)
+        if (flag_error)
+        {
+            printw("Ошибка! Некорректный ввод!\n");
+            flag_error = false;
+        }
+        else if (i>0)
         {
             printw("Произведение «%s» успешно записано\n", composition.c_str());
         }
@@ -272,11 +278,12 @@ string record_composition()                           // Ввод названи
             composition = "";
         
         else
-            add_composition(composition);
-        
-        // добавить проверку на пустую строку
-        // для этого можно добавить флаг, при включении который будет срабатывать в условии
-        // !!! добавить проверку на повторяющиеся произведения
+        {
+            if (composition != "")
+                add_composition(composition);
+            else
+                flag_error = true;
+        }
     }
     return composition;
 }

@@ -27,6 +27,7 @@ void delete_author(int index, composition* ptr);         // Удаление а�
 int count_authors(composition* ptr);             // подсчет поличества авторов
 void clearing_list();                        // Очистка списка
 void output_file_creator(string file_name);                              // Запись списка в файл 
+int count_symbols(string str);                   // Подсчет количества символов в строке
 
 void Menu(char* argv[]);        // Главное меню программы
 void interface(int choice);     // Отрисовка интерфейса главного меню программы
