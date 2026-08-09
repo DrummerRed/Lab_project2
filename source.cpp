@@ -107,7 +107,7 @@ void Menu_start_work()                              // Меню пункта "Н
     int choice_operating = 0;
     while(choice_operating != -1)
     {
-        choice_operating = choose_operating_mode();         // Выбор режима работы (клавиатура/чтение файла)
+        choice_operating = choose_operating_mode(choice_operating);         // Выбор режима работы (клавиатура/чтение файла)
 
         if (choice_operating == -1)
             break;
@@ -116,7 +116,6 @@ void Menu_start_work()                              // Меню пункта "Н
         {
             if (Menu_input_for_keyboard() == -1)
                 continue;
-            // Menu_input_for_keyboard();
         }
 
         else if (choice_operating == 1)                     // Выбор режима "Чтение из файла"
@@ -141,7 +140,7 @@ int Menu_input_for_keyboard()                      // Меню ввода с к�
     int choice_input = 0;
     while(choice_input != -1)
     {
-        choice_input = choose_input_mode();     // Выбор режима работы с записями (добавление/удаление)
+        choice_input = choose_input_mode(choice_input);     // Выбор режима работы с записями (добавление/удаление)
 
         if (choice_input == 0)                      // Добавление произведений
         {
@@ -158,8 +157,6 @@ int Menu_input_for_keyboard()                      // Меню ввода с к�
         if (choice_input == 2)                      // Просмотр и удаление произведений 
         {
             viewing_compositions();
-            // if (author == "")
-            //     continue;
         }
         if (choice_input == 3)                      // Просмотр и удаление авторов
         {
@@ -169,11 +166,10 @@ int Menu_input_for_keyboard()                      // Меню ввода с к�
     return choice_input;
 }
 
-int choose_operating_mode()                         // Выбор режима работы программы
-{                                                   //  Возвращает 0 при выборе "Ввод с клавиатуры",
-    int index = 0;                                  // 1 при выборе "Чтение из файла", 2 при выборе "Просмотр записей"
-    while(true)                                     // либо возвращает -1 при нажатии Esc
-    {    
+int choose_operating_mode(int index)                // Выбор режима работы программы
+{                                                   // Возвращает 0 при выборе "Ввод с клавиатуры",
+    while(true)                                     // 1 при выборе "Чтение из файла", 2 при выборе "Сохранение в файл"
+    {                                               // 3 при выборе "Просмотр записей", -1 при нажатии Esc
         clear();
         printw("Для возвращения в меню нажмите Esc\n");
         printw("----------------------------------\n\n");
@@ -210,13 +206,12 @@ int choose_operating_mode()                         // Выбор режима �
     }
 }
 
-int choose_input_mode()                             // Выбор режима ввода с клавиатуры
-{                                                   // Возвращает 0 при записи с консоли, 1 при чтении с файла
-    int index = 0;                                  // либо возвращает -1 при нажатии Esc
-    while(true)
-    {    
-        clear();
-        printw("Для возвращения нажмите Esc\n");
+int choose_input_mode(int index)                    // Выбор режима ввода с клавиатуры
+{                                                   // Возвращает 0 при выборе "Добавление произведений"
+    while(true)                                     // 1 при выборе "Добавление авторов"
+    {                                               // 2 при выборе "Просмотр и удаление произведений
+        clear();                                    // 3 при выборе "Просмотр и удаление авторов"
+        printw("Для возвращения нажмите Esc\n");    // либо возвращает -1 при нажатии Esc
         printw("---------------------------\n\n");
         printw("Выберите:\n\n");
         string variants[4] = {"Добавление произведений", "Добавление авторов", "Просмотр и удаление произведений", "Просмотр и удаление авторов"};

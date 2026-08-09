@@ -35,8 +35,8 @@ void Help();                    // Функция работы пункта ме
 void Menu_start_work();                              // Меню пункта "Начать работу"
 int Menu_input_for_keyboard();                         // Меню ввода с клавиатуры
 // int choose_mode();                                  // Выбор режима работы программы
-int choose_operating_mode();
-int choose_input_mode();
+int choose_operating_mode(int index);                  // Выбор режима работы программы
+int choose_input_mode(int index);                      // Выбор режима ввода с клавиатуры
 string input_string(bool* flag_esc);                   // Ввод строки
 int workaround(unsigned char first, unsigned char second);
 string record_composition();                           // Ввод произведений
