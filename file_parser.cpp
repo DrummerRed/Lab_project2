@@ -45,7 +45,6 @@ void file_reader_interface()                    // Выбор режима "Чт
                 flag_esc = true;
             else
             {
-                // какая то логика...
                 interface_of_parsing(file_name);
                 flag_esc = true;
             }
@@ -56,7 +55,7 @@ void file_reader_interface()                    // Выбор режима "Чт
 }
 
 string file_name_input()                            // Считывание имени файла
-{                                                   // Возвращает имя файл, если такой файл существует
+{                                                   // Возвращает имя файла, если такой файл существует
     bool flag_esc = false;                          // При выходе по ESC возвращает пустую строку
     int checker = 0;
     string file_name;
@@ -73,6 +72,8 @@ string file_name_input()                            // Считывание им
         printw("Введите имя файла: ");
 
         file_name = input_string(&flag_esc);
+        if (file_name.find(".txt") == -1)
+            file_name.append(".txt");
 
         if (flag_esc)
             file_name = "";
@@ -87,9 +88,9 @@ string file_name_input()                            // Считывание им
     return file_name;
 }
 
-int file_checker(string file_name)       // Функция проверки существования рабочего файла программы
-{                                         // Возвращает 1, если файл с таким именем отсутствует
-    ifstream file;                        // 2, если файл пуст
+int file_checker(string file_name)          // Функция проверки существования рабочего файла программы
+{                                           // Возвращает 1, если файл с таким именем отсутствует
+    ifstream file;                          // 2, если файл пуст
     file.open(file_name);                   // 0, если файл полностью корректен
 
     if (!file.is_open())                  
