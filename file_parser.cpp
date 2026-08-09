@@ -235,6 +235,7 @@ string file_name_output()                            // Считывание и�
 {                                                   // Возвращает имя файл, если такое имя корректно
     bool flag_esc = false;                          // При выходе по ESC возвращает пустую строку
     int checker = 1;
+    bool empty_flag = false;
     string file_name;
     while(!flag_esc)
     {
@@ -243,20 +244,35 @@ string file_name_output()                            // Считывание и�
         printw("---------------------------\n\n");
 
         if (checker != 1)
+        {
             printw("Ошибка! Файл с данным названием уже существует! Выберите другое имя файла!\n");
+            checker = 1;
+        }
+        else if (empty_flag)
+        {
+            printw("Ошибка ввода! Введите имя файла!\n");
+            empty_flag = false; 
+        }
         
         printw("Введите имя файла: ");
 
         file_name = input_string(&flag_esc);
+        if (file_name.find(".txt") == -1)
+            file_name.append(".txt");
 
         if (flag_esc)
             file_name = "";
         else
         {
-            checker = file_checker(file_name);
-            
-            if (checker == 1)
-                flag_esc = true;
+            if (file_name == ".txt")
+                empty_flag = true;
+            else
+            {
+                checker = file_checker(file_name);
+                
+                if (checker == 1)
+                    flag_esc = true;
+            }
         }
     }
     return file_name;
