@@ -422,3 +422,20 @@ int workaround(unsigned char first, unsigned char second) {             // во�
     if (first == 0xD1 && second == 0x91) return 1; // ё
     return 0;
 }
+
+int authors_symb(string author)                 // Проверка имени автора на допустимые символы
+{                                               // Возвращает 0 при корректном имени, 1 при некорректном
+    string symbols = "0123456789/?%$#@!.,/<>|}{[]};:&*()№`~=+-_^";
+    int length = author.length();
+    int invalid_symb = 0;
+    
+    for (int i=0; i<length; i++)
+    {
+        if (symbols.find(author[i]) != -1)
+        {
+            invalid_symb = 1;
+            break;
+        }
+    }
+    return invalid_symb;
+}

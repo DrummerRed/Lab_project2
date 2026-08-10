@@ -294,7 +294,8 @@ void add_author(int index, string author_name)                  // Добавл�
 
 void add_author_interface(int index)                // Интерфейс добавления авторов к произведению
 {
-    bool flag_esc = false;                                 
+    bool flag_esc = false;
+    bool symbol_flag = false;                                 
     while(!flag_esc)
     {
         composition* ptr = head_ptr;
@@ -324,14 +325,26 @@ void add_author_interface(int index)                // Интерфейс доб
                         printw(", ");
                 }
             }
+            printw("\n\n");
 
-            printw("\n\nВведите автора: ");
+            if (symbol_flag)
+            {
+                symbol_flag = false;
+                printw("Ошибка! Имя автора может содержать только буквы латинского и русского алфавитов!\n");
+            }
+
+            printw("Введите автора: ");
             string author = input_string(&flag_esc);
 
             if (flag_esc)
                 author = "";
             else if (author != "")
-                add_author(index, author);
+            {
+                if (authors_symb(author) == 0)
+                    add_author(index, author);
+                else 
+                    symbol_flag = true;
+            }
         }
 
         refresh();
