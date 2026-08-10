@@ -40,7 +40,9 @@ int choose_input_mode(int index);                      // Выбор режим�
 string input_string(bool* flag_esc);                   // Ввод строки
 int workaround(unsigned char first, unsigned char second);
 string record_composition();                           // Ввод произведений
-string record_authors();                               // Ввод авторов
+// string record_authors();                               // Ввод авторов
+void record_authors();                                      // Ввод авторов (обновленная логика)
+void add_author_interface(int index);                       // Интерфейс добавления авторов к произведению
 
 void file_reader_interface();                    // Выбор режима "Чтение из файла"
 string file_name_input();                            // Считывание имени файла

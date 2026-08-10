@@ -93,6 +93,88 @@ void clearing_list()                    // Очистка списка
         delete_composition(first_elem);
 }
 
+void record_authors()                               // Ввод авторов (обновленная логика)
+{                                       
+    bool flag_esc = false;
+    bool flag_empty = false;
+    bool flag_error = false;        // сократить код!
+    while(!flag_esc)
+    {
+        clear();
+        printw("Для возвращения нажмите Esc\n");
+        printw("---------------------------\n\n");
+
+        composition* ptr = head_ptr;
+        int iterator = 0;
+        if (ptr == nullptr)
+        {
+            printw("Записи о произведениях отсутствуют, добавление недоступно!");
+            int ch = getch();
+            if (ch == 27)
+                break;
+        }
+        else
+        {
+            while(ptr != nullptr)
+            {
+                iterator++;
+                string composition_name = ptr->name;
+                printw("%d. %s", iterator, composition_name.c_str());
+
+                author* author_ptr = ptr->author_ptr;
+                int number = 0;
+                while(author_ptr != nullptr)
+                {
+                    number++;
+                    string author_name = author_ptr->name;
+                    if (number == 1)
+                        printw(" - %s", author_name.c_str());
+                    else
+                        printw(", %s", author_name.c_str());
+
+                    author_ptr = author_ptr->next_ptr;
+                }
+                ptr = ptr->next_ptr;
+                printw("\n");
+            }
+            if (flag_empty)
+            {
+                printw("\nОшибка! Введена пустая строка!");
+                flag_empty = false;
+            }
+            if (flag_error)
+            {
+                printw("\nОшибка! Некорректный ввод!");
+                flag_error = false;
+            }
+
+            printw("\nДля добавления автора введите номер его произведения: ");
+            string cash = input_string(&flag_esc);
+            if (!flag_esc)
+            {
+                if (cash == "")
+                    flag_empty = true;
+                else
+                {
+                    try
+                    {
+                        int index = stoi(cash);
+                        if ((index > 0) && (index <= iterator))
+                            add_author_interface(index);
+                        else
+                            flag_error = true;
+                    }
+                    catch(...)
+                    {
+                        flag_error = true;
+                    }
+                }
+            }
+        }
+        refresh();
+    }
+}
+
 void viewing_compositions()             // Пока как отладочный принт
 {                                       
     bool flag_esc = false;
@@ -207,6 +289,52 @@ void add_author(int index, string author_name)                  // Добавл�
             author_ptr = author_ptr->next_ptr;
         author_ptr->next_ptr = new author;
         author_ptr->next_ptr->name = author_name; 
+    }
+}
+
+void add_author_interface(int index)                // Интерфейс добавления авторов к произведению
+{
+    bool flag_esc = false;                                 
+    while(!flag_esc)
+    {
+        composition* ptr = head_ptr;
+        for (int i=1; i<index; i++)
+            ptr = ptr->next_ptr;
+
+        author* author_ptr = ptr->author_ptr;
+
+
+        if (index > 0)
+        {
+            clear();
+            printw("Для возвращения нажмите Esc\n");
+            printw("---------------------------\n\n");
+            printw("Произведение: %s\n", ptr->name.c_str());
+            
+            if (author_ptr == nullptr)
+                printw("Авторы: не указаны");
+            else
+            {
+                printw("Авторы: ");
+                while(author_ptr != nullptr)
+                {
+                    printw("%s", author_ptr->name.c_str());
+                    author_ptr = author_ptr->next_ptr;
+                    if (author_ptr != nullptr)
+                        printw(", ");
+                }
+            }
+
+            printw("\n\nВведите автора: ");
+            string author = input_string(&flag_esc);
+
+            if (flag_esc)
+                author = "";
+            else if (author != "")
+                add_author(index, author);
+        }
+
+        refresh();
     }
 }
 
