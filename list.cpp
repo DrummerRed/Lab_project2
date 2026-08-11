@@ -295,7 +295,8 @@ void add_author(int index, string author_name)                  // Добавл�
 void add_author_interface(int index)                // Интерфейс добавления авторов к произведению
 {
     bool flag_esc = false;
-    bool symbol_flag = false;                                 
+    bool symbol_flag = false;  
+    bool len_flag = false;                               
     while(!flag_esc)
     {
         composition* ptr = head_ptr;
@@ -332,6 +333,11 @@ void add_author_interface(int index)                // Интерфейс доб
                 symbol_flag = false;
                 printw("Ошибка! Имя автора может содержать только буквы латинского и русского алфавитов!\n");
             }
+            else if (len_flag)
+            {
+                len_flag = false;
+                printw("Ошибка! Строка не должна содержать больше 40 символов!\n");
+            }
 
             printw("Введите автора: ");
             string author = input_string(&flag_esc);
@@ -340,7 +346,9 @@ void add_author_interface(int index)                // Интерфейс доб
                 author = "";
             else if (author != "")
             {
-                if (authors_symb(author) == 0)
+                if (count_symbols(author) > 40)
+                    len_flag = true;
+                else if (authors_symb(author) == 0)
                     add_author(index, author);
                 else 
                     symbol_flag = true;
@@ -620,27 +628,22 @@ void output_file_creator(string file_name)                              // За�
     if (file.is_open())
     {
         composition* ptr = head_ptr;
-        // int iterator = 0;
 
         while(ptr != nullptr)
             {
-                // iterator++;
                 string composition_name = ptr->name;
                 int length_str = count_symbols(composition_name);
-                file << "[" << composition_name << "]";
+                // file << "[" << composition_name << "]";                         /// старый вариант
+                file << "[" << upper_symb(composition_name) << "]";
                 file << string(MAX_NAME_LEN - length_str, ' ');
 
                 author* author_ptr = ptr->author_ptr;
-                // int number = 0;
                 while(author_ptr != nullptr)
                 {
-                    // number++;
                     string author_name = author_ptr->name;
-                    // if (number == 1)
-                    //     file << " - " << author_name;
-                    // else
-                    //     file << ", " << author_name;
-                    file << " " << author_name;             /// изменил вместо комментариев
+                    
+                    // file << " " << author_name;             /// изменил вместо комментариев (старый вариант)
+                    file << " " << upper_symb(author_name);
 
                     author_ptr = author_ptr->next_ptr;
                 }

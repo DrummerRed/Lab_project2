@@ -6,6 +6,8 @@
 #include <unistd.h>         /////
 #include <limits.h>         // Для константы максимальной длины пути
 #include <iomanip>          // Для вывода информации в табличном виде
+#include <cwchar>
+#include <cwctype>
 
 // #include <wchar.h>
 
@@ -56,3 +58,4 @@ void interface_of_parsing(string file_name);                     // Функци
 string file_name_output();                            // Считывание имени выходного файла
 void file_creator_interface();                      // Меню создания выходного файла
 void output_file_info(string file_name);                     // Вывод информации о записанном файле
+string upper_symb(const string& str);                // Преобразование к верхнему регистру

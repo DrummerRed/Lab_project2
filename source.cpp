@@ -252,6 +252,7 @@ string record_composition()                           // Ввод названи
     bool flag_esc = false; 
     bool empty_flag = false;
     bool symbols_flag = false;
+    bool len_flag = false;
     string composition;                                     
     for (int i=0; flag_esc!=true; i++)
     {
@@ -262,6 +263,11 @@ string record_composition()                           // Ввод названи
         {
             printw("Ошибка! Некорректный ввод!\n");
             empty_flag = false;
+        }
+        else if (len_flag)
+        {
+            printw("Ошибка! Строка не должна содержать больше 30 символов!\n");
+            len_flag = false;
         }
         else if (symbols_flag)
         {
@@ -282,7 +288,9 @@ string record_composition()                           // Ввод названи
         {
             if (composition != "")
             {
-                if (composition_symb(composition) == 0)
+                if (count_symbols(composition) > 30)
+                    len_flag = true;
+                else if (composition_symb(composition) == 0)
                     add_composition(composition);
                 else 
                     symbols_flag = true;
@@ -433,37 +441,46 @@ int workaround(unsigned char first, unsigned char second) {             // во�
     return 0;
 }
 
-int authors_symb(string author)                 // Проверка имени автора на допустимые символы
-{                                               // Возвращает 0 при корректном имени, 1 при некорректном
-    string symbols = "0123456789/?%$#@!.,/<>|}{[]};:&*()№`~=+-_^";
-    int length = author.length();
-    int invalid_symb = 0;
-    
-    for (int i=0; i<length; i++)
-    {
-        if (symbols.find(author[i]) != -1)
-        {
-            invalid_symb = 1;
-            break;
-        }
-    }
-    return invalid_symb;
-}
-
 int composition_symb(string composition)                    // Проверка названия произведения на допустимые символы
 {                                                           // Возвращает 0 при корректном названии
-    string symbols = "/%$#@/<>|}{[]};&*()№`~=+-_^";         // Возвращает 1, если присутствуют недопустимые символы
+    string rus_low = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";       // Возвращает 1, если присутствуют недопустимые символы
+    string rus_high = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ0123456789.,?!-:; ";
+    string eng_high = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    string eng_low = "abcdefghijklmnopqrstuvwxyz";
     int length = composition.length();                      
     int invalid_symb = 0;
 
     for (int i=0; i<length; i++)
     {
-        if (symbols.find(composition[i]) != -1)
+        if ((rus_low.find(composition[i]) == -1) && (rus_high.find(composition[i]) == -1)
+            && (eng_high.find(composition[i]) == -1) && (eng_low.find(composition[i]) == -1))
         {
             invalid_symb = 1;
             break;
         }
     }
     
+    return invalid_symb;
+}
+
+int authors_symb(string author)                 // Проверка имени автора на допустимые символы
+{                                               // Возвращает 0 при корректном имени, 1 при некорректном
+    string rus_low = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
+    string rus_high = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ-";
+    string eng_high = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    string eng_low = "abcdefghijklmnopqrstuvwxyz";
+    int length = author.length();
+    int invalid_symb = 0;
+    
+    for (int i=0; i<length; i++)
+    {
+        if ((rus_low.find(author[i]) == -1) && (rus_high.find(author[i]) == -1)
+            && (eng_high.find(author[i]) == -1) && (eng_low.find(author[i]) == -1))
+        {
+            invalid_symb = 1;
+            break;
+        }
+    }
+
     return invalid_symb;
 }
