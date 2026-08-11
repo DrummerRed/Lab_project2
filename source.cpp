@@ -250,17 +250,23 @@ int choose_input_mode(int index)                    // Выбор режима �
 string record_composition()                           // Ввод названия произведений
 {                                                     // Возвращает пустую строку при нажатии Esc
     bool flag_esc = false; 
-    bool flag_error = false;
+    bool empty_flag = false;
+    bool symbols_flag = false;
     string composition;                                     
     for (int i=0; flag_esc!=true; i++)
     {
         clear();
         printw("Для возвращения нажмите Esc\n");
         printw("---------------------------\n\n");
-        if (flag_error)
+        if (empty_flag)
         {
             printw("Ошибка! Некорректный ввод!\n");
-            flag_error = false;
+            empty_flag = false;
+        }
+        else if (symbols_flag)
+        {
+            printw("Ошибка! Название может содержать только цифры и буквы латинского и русского алфавитов!\n");
+            symbols_flag = false;
         }
         else if (i>0)
         {
@@ -272,13 +278,17 @@ string record_composition()                           // Ввод названи
 
         if (flag_esc)
             composition = "";
-        
         else
         {
             if (composition != "")
-                add_composition(composition);
+            {
+                if (composition_symb(composition) == 0)
+                    add_composition(composition);
+                else 
+                    symbols_flag = true;
+            }
             else
-                flag_error = true;
+                empty_flag = true;
         }
     }
     return composition;
@@ -437,5 +447,23 @@ int authors_symb(string author)                 // Проверка имени �
             break;
         }
     }
+    return invalid_symb;
+}
+
+int composition_symb(string composition)                    // Проверка названия произведения на допустимые символы
+{                                                           // Возвращает 0 при корректном названии
+    string symbols = "/%$#@/<>|}{[]};&*()№`~=+-_^";         // Возвращает 1, если присутствуют недопустимые символы
+    int length = composition.length();                      
+    int invalid_symb = 0;
+
+    for (int i=0; i<length; i++)
+    {
+        if (symbols.find(composition[i]) != -1)
+        {
+            invalid_symb = 1;
+            break;
+        }
+    }
+    
     return invalid_symb;
 }

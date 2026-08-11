@@ -44,6 +44,7 @@ string record_composition();                           // Ввод произв�
 void record_authors();                                      // Ввод авторов (обновленная логика)
 void add_author_interface(int index);                       // Интерфейс добавления авторов к произведению
 int authors_symb(string author);                 // Проверка имени автора на допустимые символы
+int composition_symb(string composition);                    // Проверка названия произведения на допустимые символы
 
 void file_reader_interface();                    // Выбор режима "Чтение из файла"
 string file_name_input();                            // Считывание имени файла
