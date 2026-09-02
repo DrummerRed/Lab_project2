@@ -359,7 +359,35 @@ void add_author_interface(int index)                // Интерфейс доб
     }
 }
 
-void show_list()                            // Вывод всего списка
+int print_compositions_with_authors(composition* ptr)          // Вывод списка произведений с авторами на консоль
+{                                                              // Возвращает значение количества произведений в списке
+    int iterator = 0;
+    while(ptr != nullptr)
+    {
+        iterator++;
+        string composition_name = ptr->name;
+        printw("%d. %s", iterator, composition_name.c_str());
+
+        author* author_ptr = ptr->author_ptr;
+        int number = 0;
+        while(author_ptr != nullptr)
+        {
+            number++;
+            string author_name = author_ptr->name;
+            if (number == 1)
+                printw(" - %s", author_name.c_str());
+            else
+                printw(", %s", author_name.c_str());
+
+            author_ptr = author_ptr->next_ptr;
+        }
+        ptr = ptr->next_ptr;
+        printw("\n");
+    }
+    return iterator;
+}
+
+void show_list()                            // Вывод всего списка на экран
 {     
     int ch = 0;                                  
     while(ch != 27)
@@ -369,36 +397,12 @@ void show_list()                            // Вывод всего списк�
         printw("---------------------------\n\n");
 
         composition* ptr = head_ptr;
-        int iterator = 0;
+        
         if (ptr == nullptr)
-        {
             printw("Записи о произведениях отсутствуют");
-        }
+
         else
-        {
-            while(ptr != nullptr)
-            {
-                iterator++;
-                string composition_name = ptr->name;
-                printw("%d. %s", iterator, composition_name.c_str());
-
-                author* author_ptr = ptr->author_ptr;
-                int number = 0;
-                while(author_ptr != nullptr)
-                {
-                    number++;
-                    string author_name = author_ptr->name;
-                    if (number == 1)
-                        printw(" - %s", author_name.c_str());
-                    else
-                        printw(", %s", author_name.c_str());
-
-                    author_ptr = author_ptr->next_ptr;
-                }
-                ptr = ptr->next_ptr;
-                printw("\n");
-            }
-        }
+            print_compositions_with_authors(ptr);
 
     ch = getch();
     }
@@ -408,7 +412,7 @@ void viewing_authors()              // Просмотр и удаление ав
 {                                       
     bool flag_esc = false;
     bool flag_empty = false;
-    bool flag_error = false;        // сократить код!
+    bool flag_error = false;        
     while(!flag_esc)
     {
         clear();
@@ -416,7 +420,7 @@ void viewing_authors()              // Просмотр и удаление ав
         printw("---------------------------\n\n");
 
         composition* ptr = head_ptr;
-        int iterator = 0;
+        
         if (ptr == nullptr)
         {
             printw("Записи о произведениях отсутствуют");
@@ -426,28 +430,8 @@ void viewing_authors()              // Просмотр и удаление ав
         }
         else
         {
-            while(ptr != nullptr)
-            {
-                iterator++;
-                string composition_name = ptr->name;
-                printw("%d. %s", iterator, composition_name.c_str());
+            int iterator = print_compositions_with_authors(ptr);
 
-                author* author_ptr = ptr->author_ptr;
-                int number = 0;
-                while(author_ptr != nullptr)
-                {
-                    number++;
-                    string author_name = author_ptr->name;
-                    if (number == 1)
-                        printw(" - %s", author_name.c_str());
-                    else
-                        printw(", %s", author_name.c_str());
-
-                    author_ptr = author_ptr->next_ptr;
-                }
-                ptr = ptr->next_ptr;
-                printw("\n");
-            }
             if (flag_empty)
             {
                 printw("\nОшибка! Введена пустая строка!");

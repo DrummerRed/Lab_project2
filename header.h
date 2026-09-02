@@ -21,6 +21,7 @@ void viewing_compositions();
 int search_composition(string composition_name);         // Поиск заданного произведения
 void delete_composition(int index);
 void add_author(int index, string author_name);                  // Добавление автора
+int print_compositions_with_authors(composition* ptr);          // Вывод списка произведений с авторами на консоль
 void show_list();                            // Вывод всего списка
 void viewing_authors();              // Просмотр и удаление авторов  
 void search_authors(int index);                   // Поиск авторов для заданного произведения
