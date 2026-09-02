@@ -105,7 +105,7 @@ void record_authors()                               // Ввод авторов (
         printw("---------------------------\n\n");
 
         composition* ptr = head_ptr;
-        int iterator = 0;
+        
         if (ptr == nullptr)
         {
             printw("Записи о произведениях отсутствуют, добавление недоступно!");
@@ -115,28 +115,8 @@ void record_authors()                               // Ввод авторов (
         }
         else
         {
-            while(ptr != nullptr)
-            {
-                iterator++;
-                string composition_name = ptr->name;
-                printw("%d. %s", iterator, composition_name.c_str());
+            int iterator = print_compositions_with_authors(ptr);
 
-                author* author_ptr = ptr->author_ptr;
-                int number = 0;
-                while(author_ptr != nullptr)
-                {
-                    number++;
-                    string author_name = author_ptr->name;
-                    if (number == 1)
-                        printw(" - %s", author_name.c_str());
-                    else
-                        printw(", %s", author_name.c_str());
-
-                    author_ptr = author_ptr->next_ptr;
-                }
-                ptr = ptr->next_ptr;
-                printw("\n");
-            }
             if (flag_empty)
             {
                 printw("\nОшибка! Введена пустая строка!");
@@ -305,7 +285,6 @@ void add_author_interface(int index)                // Интерфейс доб
 
         author* author_ptr = ptr->author_ptr;
 
-
         if (index > 0)
         {
             clear();
@@ -354,7 +333,6 @@ void add_author_interface(int index)                // Интерфейс доб
                     symbol_flag = true;
             }
         }
-
         refresh();
     }
 }
@@ -420,7 +398,7 @@ void viewing_authors()              // Просмотр и удаление ав
         printw("---------------------------\n\n");
 
         composition* ptr = head_ptr;
-        
+
         if (ptr == nullptr)
         {
             printw("Записи о произведениях отсутствуют");

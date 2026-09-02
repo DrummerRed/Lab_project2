@@ -203,10 +203,6 @@ void authors_parser(int index, string str)              // парсинг авт
         
         add_author(index, author);
         str.erase(0, i);
-
-        // printw("%ld\n", str.length());           // Отладочный принт
-        // refresh();
-        // sleep(3);
     }
 }
 
@@ -355,49 +351,3 @@ string upper_symb(const string& str)                // Преобразован�
 
     return result;
 }
-
-// string upper_symb(const string& str)
-// {
-//     string result;
-//     result.reserve(str.size());
-
-//     for (size_t i = 0; i < str.size(); )
-//     {
-//         unsigned char c1 = static_cast<unsigned char>(str[i]);
-
-//         // ASCII (латиница, цифры, знаки)
-//         if (c1 < 0x80)
-//         {
-//             if (c1 >= 'a' && c1 <= 'z')
-//                 c1 -= 32;
-//             result += static_cast<char>(c1);
-//             i += 1;
-//             continue;
-//         }
-
-//         // Двухбайтовый символ кириллицы: 0xD0/0xD1 + второй байт
-//         if ((c1 == 0xD0 || c1 == 0xD1) && i + 1 < str.size())
-//         {
-//             unsigned char c2 = static_cast<unsigned char>(str[i + 1]);
-//             unsigned int codepoint = ((c1 & 0x1Fu) << 6) | (c2 & 0x3Fu);
-
-//             // а-я (U+0430-U+044F) -> А-Я (U+0410-U+042F)
-//             if (codepoint >= 0x0430 && codepoint <= 0x044F)
-//                 codepoint -= 0x20;
-//             // ё (U+0451) -> Ё (U+0401)
-//             else if (codepoint == 0x0451)
-//                 codepoint = 0x0401;
-
-//             result += static_cast<char>(0xC0 | (codepoint >> 6));
-//             result += static_cast<char>(0x80 | (codepoint & 0x3Fu));
-//             i += 2;
-//             continue;
-//         }
-
-//         // Прочие символы — не трогаем
-//         result += static_cast<char>(c1);
-//         i += 1;
-//     }
-
-//     return result;
-// }

@@ -150,9 +150,6 @@ int Menu_input_for_keyboard()                      // Меню ввода с к�
         }
         if (choice_input == 1)                      // Добавление авторов
         {
-            // string author = record_authors();
-            // if (author == "")
-            //     continue;
             record_authors();
         }
         if (choice_input == 2)                      // Просмотр и удаление произведений 
@@ -301,64 +298,6 @@ string record_composition()                           // Ввод названи
     }
     return composition;
 }
-
-// string record_authors()                               // Ввод авторов
-// {                                                     // Возвращает пустую строку при нажатии Esc
-//     bool flag_esc = false; 
-//     bool item_find = true;
-//     string author;  
-//     string composition;                                   
-//     for (int i=0; flag_esc!=true; i++)
-//     {
-//         int index;
-//         clear();
-//         printw("Для возвращения нажмите Esc\n");
-//         printw("---------------------------\n\n");
-//         if (i>0)
-//         {
-//             if (item_find)
-//                 printw("Автор «%s» успешно записан\n", author.c_str());
-//             else
-//             {
-//                 printw("Данное произведение не найдено!\n");
-//                 item_find = true;
-//             }
-//         }
-
-//         printw("Укажите произведение, к которому хотите добавить автора: ");
-//         composition = input_string(&flag_esc);
-//         if (flag_esc)
-//         {
-//             author = "";
-//             break;
-//         }
-//         else
-//             index = search_composition(composition);
-
-//         if (index > 0)
-//         {
-//             clear();
-//             printw("Для возвращения нажмите Esc\n");
-//             printw("---------------------------\n\n");
-//             printw("Введите автора: ");
-//             author = input_string(&flag_esc);
-//             add_author(index, author);
-//         }
-//         else
-//         {
-//             item_find = false;          // Произведение не найдено
-//             continue;
-//         }
-
-//         if (flag_esc)
-//             author = "";
-        
-//         // добавить проверку на пустую строку
-//         // для этого можно добавить флаг, при включении который будет срабатывать в условии
-//         // добавить проверку на цифры
-//     }
-//     return author;
-// }
 
 string input_string(bool* flag_esc)                   // Ввод строки
 {                                                     // Возвращает введенную строку при корректном вводе
