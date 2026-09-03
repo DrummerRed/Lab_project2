@@ -129,33 +129,38 @@ void record_authors()                               // Ввод авторов (
             }
 
             printw("\nДля добавления автора введите номер его произведения: ");
-            string cash = input_string(&flag_esc);
-            if (!flag_esc)
-            {
-                if (cash == "")
-                    flag_empty = true;
-                else
-                {
-                    try
-                    {
-                        int index = stoi(cash);
-                        if ((index > 0) && (index <= iterator))
-                            add_author_interface(index);
-                        else
-                            flag_error = true;
-                    }
-                    catch(...)
-                    {
-                        flag_error = true;
-                    }
-                }
-            }
+            set_number(&flag_esc, &flag_empty, &flag_error, add_author_interface, iterator);
         }
         refresh();
     }
 }
 
-void viewing_compositions()             // Пока как отладочный принт
+void set_number(bool* flag_esc, bool* flag_empty, bool* flag_error, void(*callback)(int), int parameter)   // Ввод номера элемента списка
+{                                           
+    string cash = input_string(flag_esc);
+    if (!(*flag_esc))
+    {
+        if (cash == "")
+            *flag_empty = true;
+        else 
+        {
+            try
+            {
+                int index = stoi(cash);
+                if ((index > 0) && (index <= parameter))
+                    callback(index);
+                else
+                    *flag_error = true;
+            }
+            catch(...)
+            {
+                *flag_error = true;
+            }
+        }
+    }
+}
+
+void viewing_compositions()             // Просмотр и удаление произведений
 {                                       
     bool flag_esc = false;
     bool flag_empty = false;
@@ -196,27 +201,7 @@ void viewing_compositions()             // Пока как отладочный 
             }
 
             printw("\nДля удаления произведения введите его номер: ");
-            string cash = input_string(&flag_esc);
-            if (!flag_esc)
-            {
-                if (cash == "")
-                    flag_empty = true;
-                else 
-                {
-                    try
-                    {
-                        int index = stoi(cash);
-                        if ((index > 0) && (index <=iterator))
-                            delete_composition(index);
-                        else
-                            flag_error = true;
-                    }
-                    catch(...)
-                    {
-                        flag_error = true;
-                    }
-                }
-            }
+            set_number(&flag_esc, &flag_empty, &flag_error, delete_composition, iterator);
         }
         refresh();
     }
@@ -422,27 +407,7 @@ void viewing_authors()              // Просмотр и удаление ав
             }
 
             printw("\nДля удаления автора введите номер его произведения: ");
-            string cash = input_string(&flag_esc);
-            if (!flag_esc)
-            {
-                if (cash == "")
-                    flag_empty = true;
-                else
-                {
-                    try
-                    {
-                        int index = stoi(cash);
-                        if ((index > 0) && (index <= iterator))
-                            search_authors(index);
-                        else
-                            flag_error = true;
-                    }
-                    catch(...)
-                    {
-                        flag_error = true;
-                    }
-                }
-            }
+            set_number(&flag_esc, &flag_empty, &flag_error, search_authors, iterator);
         }
         refresh();
     }
@@ -561,7 +526,6 @@ void delete_author(int index, composition* ptr)         // Удаление ав
             prev_author_ptr->next_ptr = next_author_ptr;
             delete author_ptr;
         }
-
     }
 }
 
@@ -592,27 +556,27 @@ void output_file_creator(string file_name)                              // За�
         composition* ptr = head_ptr;
 
         while(ptr != nullptr)
+        {
+            string composition_name = ptr->name;
+            int length_str = count_symbols(composition_name);
+            // file << "[" << composition_name << "]";                         /// старый вариант
+            file << "[" << upper_symb(composition_name) << "]";
+            file << string(MAX_NAME_LEN - length_str, ' ');
+
+            author* author_ptr = ptr->author_ptr;
+            while(author_ptr != nullptr)
             {
-                string composition_name = ptr->name;
-                int length_str = count_symbols(composition_name);
-                // file << "[" << composition_name << "]";                         /// старый вариант
-                file << "[" << upper_symb(composition_name) << "]";
-                file << string(MAX_NAME_LEN - length_str, ' ');
+                string author_name = author_ptr->name;
+                
+                // file << " " << author_name;             /// изменил вместо комментариев (старый вариант)
+                file << " " << upper_symb(author_name);
 
-                author* author_ptr = ptr->author_ptr;
-                while(author_ptr != nullptr)
-                {
-                    string author_name = author_ptr->name;
-                    
-                    // file << " " << author_name;             /// изменил вместо комментариев (старый вариант)
-                    file << " " << upper_symb(author_name);
-
-                    author_ptr = author_ptr->next_ptr;
-                }
-                ptr = ptr->next_ptr;
-                if (ptr != nullptr)
-                    file << endl;
+                author_ptr = author_ptr->next_ptr;
             }
+            ptr = ptr->next_ptr;
+            if (ptr != nullptr)
+                file << endl;
+        }
     }
 }
 
@@ -630,9 +594,7 @@ int count_symbols(string str)                   // Подсчет количес
             if (workaround(first, second) == 1)
                 i++;
         }
-
         count++;
     }
-
     return count;
 }

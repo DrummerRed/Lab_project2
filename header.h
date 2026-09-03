@@ -29,6 +29,7 @@ int delete_author_interface(composition* ptr);                  // Вывод с
 void delete_author(int index, composition* ptr);                // Удаление авторов
 int count_authors(composition* ptr);                            // подсчет поличества авторов
 void clearing_list();                                           // Очистка списка
+void set_number(bool* flag_esc, bool* flag_empty, bool* flag_error, void(*callback)(int), int parameter);   // Ввод номера элемента списка
 void output_file_creator(string file_name);                     // Запись списка в файл 
 int count_symbols(string str);                                  // Подсчет количества символов в строке
 
