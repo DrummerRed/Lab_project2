@@ -233,6 +233,7 @@ string file_name_output()                            // Считывание и�
     bool flag_esc = false;                          // При выходе по ESC возвращает пустую строку
     int checker = 1;
     bool empty_flag = false;
+    bool file_name_error = false;
     string file_name;
     while(!flag_esc)
     {
@@ -250,6 +251,11 @@ string file_name_output()                            // Считывание и�
             printw("Ошибка ввода! Введите имя файла!\n");
             empty_flag = false; 
         }
+        else if (file_name_error)
+        {
+            printw("%s\n", "Ошибка ввода! Имя файла не может содержать служебные символы: \\&;|*?`[]()$<>{}^#/%!\'\"");
+            file_name_error = false;
+        }
         
         printw("Введите имя файла: ");
 
@@ -263,6 +269,10 @@ string file_name_output()                            // Считывание и�
         {
             if (file_name == ".txt")
                 empty_flag = true;
+
+            else if (file_name_symb(file_name) == 1)
+                file_name_error = true;
+
             else
             {
                 checker = file_checker(file_name);

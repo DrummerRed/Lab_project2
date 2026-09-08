@@ -392,6 +392,7 @@ int workaround(unsigned char first, unsigned char second) {             // во�
     return 0;
 }
 
+// composition_symb и authors_symb так то можно объединить в одну функцию с каким то параметром
 int composition_symb(string composition)                    // Проверка названия произведения на допустимые символы
 {                                                           // Возвращает 0 при корректном названии
     string rus_low = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";       // Возвращает 1, если присутствуют недопустимые символы
@@ -427,6 +428,25 @@ int authors_symb(string author)                 // Проверка имени �
     {
         if ((rus_low.find(author[i]) == -1) && (rus_high.find(author[i]) == -1)
             && (eng_high.find(author[i]) == -1) && (eng_low.find(author[i]) == -1))
+        {
+            invalid_symb = 1;
+            break;
+        }
+    }
+
+    return invalid_symb;
+}
+
+int file_name_symb(string file_name)                 // Проверка названия файла на допустимые символы
+{                                                    // Возвращает 0 при корректном имени, 1 при некорректном
+    string error_symb = "\\&;|*?`[]()$<>{}^#/%!\'\"";
+
+    int length = file_name.length();
+    int invalid_symb = 0;
+    
+    for (int i=0; i<length; i++)
+    {
+        if (error_symb.find(file_name[i]) != -1)
         {
             invalid_symb = 1;
             break;
