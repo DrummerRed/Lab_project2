@@ -249,7 +249,8 @@ string record_composition()                           // Ввод названи
     bool flag_esc = false; 
     bool empty_flag = false;
     bool symbols_flag = false;
-    bool len_flag = false;
+    bool len_flag = false;                              // Диагностические сообщения можно перенести в отдельную функцию с парам-ми - флагами
+    bool repeat_flag = false;
     string composition;                                     
     for (int i=0; flag_esc!=true; i++)
     {
@@ -271,6 +272,11 @@ string record_composition()                           // Ввод названи
             printw("Ошибка! Название может содержать только цифры и буквы латинского и русского алфавитов!\n");
             symbols_flag = false;
         }
+        else if (repeat_flag)
+        {
+            printw("Ошибка! Произведение «%s» уже записано!\n", composition.c_str());
+            repeat_flag = false;
+        }
         else if (i>0)
         {
             printw("Произведение «%s» успешно записано\n", composition.c_str());
@@ -288,7 +294,13 @@ string record_composition()                           // Ввод названи
                 if (count_symbols(composition) > 30)
                     len_flag = true;
                 else if (composition_symb(composition) == 0)
-                    add_composition(composition);
+                {
+                    composition = upper_symb(composition);
+                    if ((search_composition(composition) == 0) || (search_composition(composition) == -1))
+                        add_composition(composition);
+                    else
+                        repeat_flag = true;
+                }
                 else 
                     symbols_flag = true;
             }

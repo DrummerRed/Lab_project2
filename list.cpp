@@ -231,7 +231,7 @@ int search_composition(string composition_name)                 // Поиск з
         if (item_find)
             return iterator;
         else
-            return -2;                                          // Произведение не найдено в списке
+            return -1;                                          // Произведение не найдено в списке
     }
 }
 
@@ -313,7 +313,10 @@ void add_author_interface(int index)                // Интерфейс доб
                 if (count_symbols(author) > 40)
                     len_flag = true;
                 else if (authors_symb(author) == 0)
+                {
+                    author = upper_symb(author);
                     add_author(index, author);
+                }
                 else 
                     symbol_flag = true;
             }

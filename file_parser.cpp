@@ -332,7 +332,7 @@ void output_file_info(string file_name)                     // Вывод инф
 }
 
 string upper_symb(const string& str)                // Преобразование к верхнему регистру
-{
+{                                                   // Разобраться или упростить!!!
     size_t wcap = str.size() + 1;
     wchar_t* wbuf = new wchar_t[wcap];
     size_t len = mbstowcs(wbuf, str.c_str(), wcap);
