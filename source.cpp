@@ -84,22 +84,23 @@ void Help()             // Функция работы пункта меню "П
         printf("Ошибка: не удалось считать файл инструкций!\n");
         exit(0);
     }
+    
     int symb;
     while ((symb = fgetc(file)) != EOF) 
     {
         str = (char)symb;
         duplicate_str += str;
     }
+
     fclose(file);
     reset_prog_mode();                  // Восстанавливаем режим
     clear();
     printw("%s", duplicate_str.c_str());
     refresh();
+
     int ch = 0;
     while((int)ch != 27)
-    {
         ch = getch();
-    }
 }
 
 void Menu_start_work()                              // Меню пункта "Начать работу"
@@ -447,6 +448,25 @@ int file_name_symb(string file_name)                 // Проверка наз�
     for (int i=0; i<length; i++)
     {
         if (error_symb.find(file_name[i]) != -1)
+        {
+            invalid_symb = 1;
+            break;
+        }
+    }
+
+    return invalid_symb;
+}
+
+int numbers_symb(string number)                     // Проверка введенного номера на допустимые символы
+{                                                   // Возвращает 0 при корректном номере, иначе возвращает 1
+    string numbers = "0123456789";
+
+    int length = number.length();
+    int invalid_symb = 0;
+
+    for (int i=0; i<length; i++)
+    {
+        if (numbers.find(number[i]) == -1)
         {
             invalid_symb = 1;
             break;

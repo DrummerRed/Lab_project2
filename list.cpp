@@ -144,18 +144,16 @@ void set_number(bool* flag_esc, bool* flag_empty, bool* flag_error, void(*callba
             *flag_empty = true;
         else 
         {
-            try
+            if (numbers_symb(cash) == 0)
             {
                 int index = stoi(cash);
                 if ((index > 0) && (index <= parameter))
                     callback(index);
-                else
+                else 
                     *flag_error = true;
-            }
-            catch(...)
-            {
+            }                                   
+            else                                // а вот здесь можно расписать логику для ввода названия произведения
                 *flag_error = true;
-            }
         }
     }
 }
@@ -477,19 +475,16 @@ int delete_author_interface(composition* ptr)              // Вывод спи�
                     flag_empty = true;
                 else
                 {
-                    try
+                    if (numbers_symb(cash) == 0)
                     {
                         int index = stoi(cash);
                         if ((index > 0) && (index <= authors))
                             delete_author(index, ptr);
-        
-                        else
+                        else 
                             flag_error = true;
-                    }
-                    catch(...)
-                    {
+                    }                                  
+                    else                                
                         flag_error = true;
-                    }
                 }
             }
         }
