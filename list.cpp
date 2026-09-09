@@ -128,7 +128,7 @@ void record_authors()                               // Ввод авторов (
                 flag_error = false;
             }
 
-            printw("\nДля добавления автора введите номер его произведения: ");
+            printw("\nДля добавления автора введите название произведения или его порядковый номер: ");
             set_number(&flag_esc, &flag_empty, &flag_error, add_author_interface, iterator);
         }
         refresh();
@@ -150,10 +150,23 @@ void set_number(bool* flag_esc, bool* flag_empty, bool* flag_error, void(*callba
                 if ((index > 0) && (index <= parameter))
                     callback(index);
                 else 
-                    *flag_error = true;
+                {
+                    index = search_composition(cash);                   /////////////
+                    if ((index != 0) && (index != -1))
+                        callback(index);
+                    else 
+                        *flag_error = true;
+                }
             }                                   
-            else                                // а вот здесь можно расписать логику для ввода названия произведения
-                *flag_error = true;
+            else                                
+            {
+                cash = upper_symb(cash);
+                int index = search_composition(cash);                   /////////// можно объединить в одну функцию
+                if ((index != 0) && (index != -1))
+                    callback(index);
+                else 
+                    *flag_error = true;
+            }
         }
     }
 }
@@ -198,7 +211,7 @@ void viewing_compositions()             // Просмотр и удаление 
                 flag_error = false;
             }
 
-            printw("\nДля удаления произведения введите его номер: ");
+            printw("\nДля удаления произведения введите его название или номер: ");
             set_number(&flag_esc, &flag_empty, &flag_error, delete_composition, iterator);
         }
         refresh();
@@ -407,7 +420,7 @@ void viewing_authors()              // Просмотр и удаление ав
                 flag_error = false;
             }
 
-            printw("\nДля удаления автора введите номер его произведения: ");
+            printw("\nДля удаления автора введите название произведения или его номер: ");
             set_number(&flag_esc, &flag_empty, &flag_error, search_authors, iterator);
         }
         refresh();
