@@ -128,7 +128,7 @@ void record_authors()                               // Ввод авторов (
                 flag_error = false;
             }
 
-            printw("\nДля добавления автора введите название произведения или его порядковый номер: ");
+            printw("\nДля добавления автора введите название произведения или его номер: ");
             set_number(&flag_esc, &flag_empty, &flag_error, add_author_interface, iterator);
         }
         refresh();
@@ -580,7 +580,7 @@ void output_file_creator(string file_name)                              // За�
                 string author_name = author_ptr->name;
                 
                 // file << " " << author_name;             /// изменил вместо комментариев (старый вариант)
-                file << " " << upper_symb(author_name);
+                file << "  " << upper_symb(author_name);
 
                 author_ptr = author_ptr->next_ptr;
             }

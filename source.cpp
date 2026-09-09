@@ -84,7 +84,7 @@ void Help()             // Функция работы пункта меню "П
         printf("Ошибка: не удалось считать файл инструкций!\n");
         exit(0);
     }
-    
+
     int symb;
     while ((symb = fgetc(file)) != EOF) 
     {
@@ -403,13 +403,19 @@ int composition_symb(string composition)                    // Проверка 
     int length = composition.length();                      
     int invalid_symb = 0;
 
-    for (int i=0; i<length; i++)
+    if (composition.find("  ") != -1)
+        invalid_symb = 1;
+
+    else
     {
-        if ((rus_low.find(composition[i]) == -1) && (rus_high.find(composition[i]) == -1)
-            && (eng_high.find(composition[i]) == -1) && (eng_low.find(composition[i]) == -1))
+        for (int i=0; i<length; i++)
         {
-            invalid_symb = 1;
-            break;
+            if ((rus_low.find(composition[i]) == -1) && (rus_high.find(composition[i]) == -1)
+                && (eng_high.find(composition[i]) == -1) && (eng_low.find(composition[i]) == -1))
+            {
+                invalid_symb = 1;
+                break;
+            }
         }
     }
     
@@ -419,19 +425,25 @@ int composition_symb(string composition)                    // Проверка 
 int authors_symb(string author)                 // Проверка имени автора на допустимые символы
 {                                               // Возвращает 0 при корректном имени, 1 при некорректном
     string rus_low = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
-    string rus_high = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ-";
+    string rus_high = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ- ";
     string eng_high = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     string eng_low = "abcdefghijklmnopqrstuvwxyz";
     int length = author.length();
     int invalid_symb = 0;
+
+    if (author.find("  ") != -1)
+        invalid_symb = 1;
     
-    for (int i=0; i<length; i++)
+    else
     {
-        if ((rus_low.find(author[i]) == -1) && (rus_high.find(author[i]) == -1)
-            && (eng_high.find(author[i]) == -1) && (eng_low.find(author[i]) == -1))
+        for (int i=0; i<length; i++)
         {
-            invalid_symb = 1;
-            break;
+            if ((rus_low.find(author[i]) == -1) && (rus_high.find(author[i]) == -1)
+                && (eng_high.find(author[i]) == -1) && (eng_low.find(author[i]) == -1))
+            {
+                invalid_symb = 1;
+                break;
+            }
         }
     }
 

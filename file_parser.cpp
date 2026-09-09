@@ -193,10 +193,10 @@ void authors_parser(int index, string str)              // парсинг авт
         int i = 0;
         for (; i<author.length(); i++)
         {
-            if ((str[i] == ' '))
+            if ((str[i] == ' ') && (str[i+1] == ' '))
             {
                 author.erase(i, author.length()-i);
-                i++;
+                i += 2;
                 break;
             }
         }
