@@ -22,7 +22,7 @@ void file_reader_interface()                    // Выбор режима "Чт
                 printw("  %s\n<< %s >>", array[0].c_str(), array[1].c_str());
 
             int ch = getch();
-            if ((ch == 258) || (ch == 259))
+            if ((ch == DOWN) || (ch == UP))
             {
                 if (choice == 0)
                     choice = 1;
@@ -30,7 +30,7 @@ void file_reader_interface()                    // Выбор режима "Чт
                     choice = 0;
             }
             
-            if (ch == 10)
+            if (ch == ENTER)
             {
                 if (choice == 0)
                     clearing_list();
@@ -49,7 +49,6 @@ void file_reader_interface()                    // Выбор режима "Чт
                 flag_esc = true;
             }
         }
-        
         refresh();
     }
 }
@@ -69,8 +68,8 @@ string file_name_input()                            // Считывание им
             printw("Ошибка! Файл с данным названием отсутствует!\n");
         else if (checker == 2)
             printw("Ошибка! Данный файл пуст!\n");
-        printw("Введите имя файла: ");
 
+        printw("Введите имя файла: ");
         file_name = input_string(&flag_esc);
         if (file_name.find(".txt") == -1)
             file_name.append(".txt");
@@ -210,7 +209,7 @@ void interface_of_parsing(string file_name)                     // Функци�
 {
     int result = file_parser(file_name);
     int ch = 0;
-    while(ch != 27)
+    while(ch != ESC)
     {
         clear();
         printw("Для возвращения нажмите Esc\n");
@@ -300,7 +299,7 @@ void file_creator_interface()                      // Меню создания 
         {
             printw("Записи о произведениях отсутствуют, сохранение недоступно");
             int ch = getch();
-            if (ch == 27)
+            if (ch == ESC)
                 flag_esc = true;
         }
         else
@@ -337,7 +336,7 @@ void output_file_info(string file_name)                     // Вывод инф
         printw("Ошибка! Файл не был загружен!\n");
 
     int ch = 0;
-    while(ch != 27)
+    while(ch != ESC)
         ch = getch();
 }
 

@@ -9,9 +9,12 @@
 #include <cwchar>
 #include <cwctype>
 
-// #include <wchar.h>
-
 using namespace std;
+
+const int ESC = 27;
+const int ENTER = 10;
+const int DOWN = 258;
+const int UP = 259;
 
 struct author;
 struct composition;
@@ -44,6 +47,7 @@ string input_string(bool* flag_esc);                            // Ввод ст
 int workaround(unsigned char first, unsigned char second);
 string record_composition();                                    // Ввод произведений
 void record_authors();                                          // Ввод авторов (обновленная логика)
+void diagnostic_message(bool* flag_empty, int* flag_error, string cash);          // Вывод диагностического сообщения на экран
 void add_author_interface(int index);                           // Интерфейс добавления авторов к произведению
 int authors_symb(string author);                                // Проверка имени автора на допустимые символы
 int composition_symb(string composition);                       // Проверка названия произведения на допустимые символы

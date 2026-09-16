@@ -1,8 +1,6 @@
 #include "header.h"
 
 const string HELP = "help.txt";     // Название файла для вкладки "Помощь"
-const int OPERATING_MODE = 1;       // Флаг для режима работы
-const int INPUT_MODE = 2;           // Флаг для режима ввода
 
 void Menu(char* argv[])         // Главное меню программы
 {
@@ -13,45 +11,41 @@ void Menu(char* argv[])         // Главное меню программы
     curs_set(0);                // выключение курсора
 
     int switcher = 1;
-    while(true)
+    bool flag_esc = false;
+    while(!flag_esc)
     {    
         clear();
         interface(switcher);
         refresh();
         int ch = getch();
-        if (ch == 258)
+        if (ch == DOWN)
         {
             if (switcher != 3)
                 switcher += 1;
             else
                 switcher = 1;
         }
-        if (ch == 259)
+        if (ch == UP)
         {
             if (switcher != 1)
                 switcher -= 1;
             else
                 switcher = 3;
         }
-        if (ch == 10)
+        if (ch == ENTER)
         {
             if (switcher == 1)
-            {
                 Help();
-            }
+
             if (switcher == 2)
-            {
                 Menu_start_work();
-            }
+            
             if (switcher == 3)
-            {
-                endwin();
-                system("clear");
-                exit(0);
-            }
+                flag_esc = true;
         }
     }
     endwin();
+    system("clear");
 }
 
 void interface(int choice)      // Отрисовка интерфейса главного меню программы
@@ -72,39 +66,41 @@ void interface(int choice)      // Отрисовка интерфейса гл�
 
 void Help()             // Функция работы пункта меню "Помощь"
 {
-    def_prog_mode();                    // Сохраняем режим ncurses
-    endwin();                           // Временно выключаем ncurses
-    system("clear");
-    char str;
-    string duplicate_str = "";
-    FILE * file = fopen(HELP.c_str(), "r");
-
-    if (file == NULL)
-    {
-        printf("Ошибка: не удалось считать файл инструкций!\n");
-        exit(0);
-    }
-
-    int symb;
-    while ((symb = fgetc(file)) != EOF) 
-    {
-        str = (char)symb;
-        duplicate_str += str;
-    }
-
-    fclose(file);
-    reset_prog_mode();                  // Восстанавливаем режим
-    clear();
-    printw("%s", duplicate_str.c_str());
-    refresh();
-
     int ch = 0;
-    while((int)ch != 27)
+    while(ch != ESC)
+    {
+        clear();
+
+        char str;
+        string duplicate_str = "";
+        FILE * file = fopen(HELP.c_str(), "r");
+
+        if (file == NULL)
+        {
+            printw("Для возвращения в меню нажмите Esc\n");
+            printw("----------------------------------\n\n");
+            printw("Ошибка: не удалось считать файл инструкций!\n");
+            printw("Проверьте наличие файла help.txt в рабочей директории программы!");
+        }
+        else
+        {
+            int symb;
+            while ((symb = fgetc(file)) != EOF) 
+            {
+                str = (char)symb;
+                duplicate_str += str;
+            }
+            fclose(file);
+            printw("%s", duplicate_str.c_str());
+        }
+
         ch = getch();
+        refresh();
+    }
 }
 
 void Menu_start_work()                              // Меню пункта "Начать работу"
-{                                                           // Для того чтобы не выходить сразу вменю из второго выбора можно организовать цикл
+{                                                           
     int choice_operating = 0;
     while(choice_operating != -1)
     {
@@ -183,24 +179,24 @@ int choose_operating_mode(int index)                // Выбор режима �
         }
         refresh();
         int ch = getch();
-        if (ch == 258)
+        if (ch == DOWN)
         {
             if (index == 3)
                 index = 0;
             else
                 index++;
         }
-        if (ch == 259)
+        if (ch == UP)
         {
             if (index == 0)
                 index = 3;
             else 
                 index--;
         }
-        if (ch == 10)                       
+        if (ch == ENTER)                       
             return index;
 
-        if (ch == 27)
+        if (ch == ESC)
             return -1;
     }
 }
@@ -223,24 +219,24 @@ int choose_input_mode(int index)                    // Выбор режима �
         }
         refresh();
         int ch = getch();
-        if (ch == 258)
+        if (ch == DOWN)
         {
             if (index == 3)
                 index = 0;
             else
                 index++;
         }
-        if (ch == 259)
+        if (ch == UP)
         {
             if (index == 0)
                 index = 3;
             else
                 index--;
         }
-        if (ch == 10)                       
+        if (ch == ENTER)                       
             return index;
 
-        if (ch == 27)
+        if (ch == ESC)
             return -1;
     }
 }
@@ -356,13 +352,13 @@ string input_string(bool* flag_esc)                   // Ввод строки
                 }  
             }
         }
-        else if (ch == 27)              // Выход по ESC
+        else if (ch == ESC)              // Выход по ESC
         {
             *flag_esc = true;
             break;
         }              
 
-        else if (ch == 10)              // Выход при нажатии Enter
+        else if (ch == ENTER)              // Выход при нажатии Enter
             break;
 
         else
@@ -382,14 +378,21 @@ string input_string(bool* flag_esc)                   // Ввод строки
 
 int workaround(unsigned char first, unsigned char second) {             // возвращает 1, если это символ кириллицы (2 байтовый)
     // D0 90-BF (А-Я), D0 80-8F (а-п), D1 80-BF (р-я, Ё)                // иначе 0
-    // А-Я
-    if (first == 0xD0 && second >= 0x90 && second <= 0xBF) return 1;
-    // а-п
-    if (first == 0xD0 && second >= 0x80 && second <= 0x8F) return 1;
-    // р-я
-    if (first == 0xD1 && second >= 0x80 && second <= 0x8F) return 1;
-    if (first == 0xD0 && second == 0x81) return 1; // Ё
-    if (first == 0xD1 && second == 0x91) return 1; // ё
+    if (first == 0xD0 && second >= 0x90 && second <= 0xBF)              // А-Я
+        return 1;
+
+    if (first == 0xD0 && second >= 0x80 && second <= 0x8F)              // а-п
+        return 1;
+    
+    if (first == 0xD1 && second >= 0x80 && second <= 0x8F)              // р-я
+        return 1;
+
+    if (first == 0xD0 && second == 0x81)                                // Ё
+        return 1; 
+
+    if (first == 0xD1 && second == 0x91)                                // ё
+        return 1;
+        
     return 0;
 }
 

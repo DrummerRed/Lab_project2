@@ -93,6 +93,25 @@ void clearing_list()                    // Очистка списка
         delete_composition(first_elem);
 }
 
+void diagnostic_message(bool* flag_empty, int* flag_error, string cash)          // Вывод диагностического сообщения на экран
+{
+    if (*flag_empty)
+    {
+        printw("\nОшибка! Введена пустая строка!");
+        *flag_empty = false;
+    }
+    if (*flag_error == 1)
+    {
+        printw("\nОшибка! Введен некорректный номер!");
+        *flag_error = 0;
+    }
+    else if (*flag_error == 2)
+    {
+        printw("\nОшибка! Произведение «%s» отсутствует!", cash.c_str());
+        *flag_error = 0;
+    }
+}
+
 void record_authors()                               // Ввод авторов (обновленная логика)
 {                                       
     bool flag_esc = false;
@@ -112,29 +131,13 @@ void record_authors()                               // Ввод авторов (
         {
             printw("Записи о произведениях отсутствуют, добавление недоступно!");
             int ch = getch();
-            if (ch == 27)
+            if (ch == ESC)
                 break;
         }
         else
         {
             int iterator = print_compositions_with_authors(ptr);
-
-            if (flag_empty)
-            {
-                printw("\nОшибка! Введена пустая строка!");
-                flag_empty = false;
-            }
-            if (flag_error == 1)
-            {
-                printw("\nОшибка! Введен некорректный номер!");
-                flag_error = 0;
-            }
-            else if (flag_error == 2)
-            {
-                printw("\nОшибка! Произведение «%s» отсутствует!", cash.c_str());
-                flag_error = 0;
-            }
-
+            diagnostic_message(&flag_empty, &flag_error, cash);
             printw("\nДля добавления автора введите название произведения или его номер: ");
             cash = set_number(&flag_esc, &flag_empty, &flag_error, add_author_interface, iterator);
         }
@@ -199,7 +202,7 @@ void viewing_compositions()             // Просмотр и удаление 
         {
             printw("Записи о произведениях отсутствуют");
             int ch = getch();
-            if (ch == 27)
+            if (ch == ESC)
                 break;
         }
         else
@@ -211,22 +214,8 @@ void viewing_compositions()             // Просмотр и удаление 
                 printw("%d. %s\n", iterator, name.c_str());
                 ptr = ptr->next_ptr;
             }
-            if (flag_empty)
-            {
-                printw("\nОшибка! Введена пустая строка!");
-                flag_empty = false;
-            }
-            if (flag_error == 1)
-            {
-                printw("\nОшибка! Введен некорректный номер!");
-                flag_error = 0;
-            }
-            else if (flag_error == 2)
-            {
-                printw("\nОшибка! Произведение «%s» отсутствует!", cash.c_str());
-                flag_error = 0;
-            }
-
+            
+            diagnostic_message(&flag_empty, &flag_error, cash);
             printw("\nДля удаления произведения введите его название или номер: ");
             cash = set_number(&flag_esc, &flag_empty, &flag_error, delete_composition, iterator);
         }
@@ -383,7 +372,7 @@ int print_compositions_with_authors(composition* ptr)          // Вывод с�
 void show_list()                            // Вывод всего списка на экран
 {     
     int ch = 0;                                  
-    while(ch != 27)
+    while(ch != ESC)
     {
         clear();
         printw("Для возвращения нажмите Esc\n");
@@ -420,29 +409,13 @@ void viewing_authors()              // Просмотр и удаление ав
         {
             printw("Записи о произведениях отсутствуют");
             int ch = getch();
-            if (ch == 27)
+            if (ch == ESC)
                 break;
         }
         else
         {
             int iterator = print_compositions_with_authors(ptr);
-
-            if (flag_empty)
-            {
-                printw("\nОшибка! Введена пустая строка!");
-                flag_empty = false;
-            }
-            if (flag_error == 1)
-            {
-                printw("\nОшибка! Введен некорректный номер!");
-                flag_error = 0;
-            }
-            else if (flag_error == 2)
-            {
-                printw("\nОшибка! Произведение «%s» отсутствует!", cash.c_str());
-                flag_error = 0;
-            }
-
+            diagnostic_message(&flag_empty, &flag_error, cash);
             printw("\nДля удаления автора введите название произведения или его номер: ");
             cash = set_number(&flag_esc, &flag_empty, &flag_error, search_authors, iterator);
         }
@@ -478,7 +451,7 @@ int delete_author_interface(composition* ptr)              // Вывод спи�
         {
             printw("У данного произведения отсутствуют авторы.");
             int ch = getch();
-            if (ch == 27)
+            if (ch == ESC)
                 break;
         }
         else
