@@ -312,7 +312,7 @@ string input_string(bool* flag_esc)                   // Ввод строки
 {                                                     // Возвращает введенную строку при корректном вводе
     string str = "";                                  // При выходе по Esc возвращает пустую строку
     int x, y;
-    echo();
+    noecho();
     curs_set(1);
     while(true)
     {
@@ -332,14 +332,14 @@ string input_string(bool* flag_esc)                   // Ввод строки
                     {
                         str.erase(str.length()-2, 2);
                         getyx(stdscr, y, x);
-                        move(y, x);
+                        move(y, x-1);
                         delch();
                     }
                     else                                   
                     {
                         str.erase(str.length()-1, 1);
                         getyx(stdscr, y, x);
-                        move(y, x);
+                        move(y, x-1);
                         delch();
                     }
                 }
@@ -347,7 +347,7 @@ string input_string(bool* flag_esc)                   // Ввод строки
                 {
                     str.erase(str.length()-1, 1);
                     getyx(stdscr, y, x);
-                    move(y, x);
+                    move(y, x-1);
                     delch();
                 }  
             }
@@ -364,15 +364,18 @@ string input_string(bool* flag_esc)                   // Ввод строки
         else
         {
             str += ch;
+            addch(ch);
             if (ch >= 0xC0 && ch <= 0xDF)
             {                                       // если двухбайтовый символ
                 int next_ch = getch();              // считываем находящийся в буфере второй байт символа
                 str += next_ch;
+                addch(next_ch);
             }
         }
     }
     noecho();
     curs_set(0);
+    echo();
     return str;
 }
 
