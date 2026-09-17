@@ -266,7 +266,8 @@ string record_composition()                           // Ввод названи
         }
         else if (symbols_flag)
         {
-            printw("Ошибка! Название может содержать только цифры и буквы латинского и русского алфавитов!\n");
+            printw("Ошибка! Название может содержать только:\n");
+            printw("- цифры\n- буквы латинского и русского алфавитов\n- знак пробела в виде разделителя\n\n");
             symbols_flag = false;
         }
         else if (repeat_flag)
@@ -412,6 +413,9 @@ int composition_symb(string composition)                    // Проверка 
     if (composition.find("  ") != -1)
         invalid_symb = 1;
 
+    else if ((composition[length-1] == ' ') || (composition[0] == ' '))
+        invalid_symb = 1;
+
     else
     {
         for (int i=0; i<length; i++)
@@ -439,7 +443,10 @@ int authors_symb(string author)                 // Проверка имени �
 
     if (author.find("  ") != -1)
         invalid_symb = 1;
-    
+
+    else if ((author[length-1] == ' ') || (author[0] == ' '))
+        invalid_symb = 1;
+
     else
     {
         for (int i=0; i<length; i++)
