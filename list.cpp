@@ -154,17 +154,17 @@ void diagnostic_message(int* flag_error, string cash)          // Вывод д�
     if (*flag_error == 1)
     {
         printw("\nОшибка! Введен некорректный номер!");
-        *flag_error = 0;
+        // *flag_error = 0;
     }
     else if (*flag_error == 2)
     {
         printw("\nОшибка! Произведение «%s» отсутствует!", cash.c_str());
-        *flag_error = 0;
+        // *flag_error = 0;
     }
     else if (*flag_error == 3)
     {
         printw("\nОшибка! Введена пустая строка!");
-        *flag_error = 0;
+        // *flag_error = 0;
     }
 }
 
@@ -175,6 +175,7 @@ void record_authors()                               // Ввод авторов (
     int cur_page = 1;
     string arrow;
     string cash;
+    string cash_2;
 
     while(!flag_esc)
     {
@@ -196,13 +197,11 @@ void record_authors()                               // Ввод авторов (
             cur_page = current_page(cur_page, arrow);                           // получение номера текущей страницы
             arrow = "";
             int iterator = print_compositions_with_authors_2(ptr, cur_page);
-            diagnostic_message(&flag_error, cash);
+            diagnostic_message(&flag_error, cash_2);
             printw("\nДля добавления автора введите название произведения или его номер: ");
             cash = set_number(&flag_esc, &flag_error, add_author_interface, iterator, &arrow);
-            if ((arrow != "left") || (arrow != "right"))
-            {
-                // выключаем сообщение
-            }
+            if ((arrow != "left") && (arrow != "right"))
+                cash_2 = cash;
         }
         refresh();
     }
@@ -221,12 +220,18 @@ string set_number(bool* flag_esc, int* flag_error, void(*callback)(int), int par
             {
                 int index = stoi(cash);
                 if ((index > 0) && (index <= parameter))
+                {
                     callback(index);
+                    *flag_error = 0;
+                }
                 else 
                 {
                     index = search_composition(cash);                   /////////////
                     if ((index != 0) && (index != -1))
+                    {
                         callback(index);
+                        *flag_error = 0;
+                    }
                     else 
                         *flag_error = 1;                            // Некорректный номер числа
                 }
@@ -236,7 +241,10 @@ string set_number(bool* flag_esc, int* flag_error, void(*callback)(int), int par
                 cash = upper_symb(cash);
                 int index = search_composition(cash);                   /////////// можно объединить в одну функцию
                 if ((index != 0) && (index != -1))
+                {
                     callback(index);
+                    *flag_error = 0;
+                }
                 else 
                     *flag_error = 2;                            // Произведение с таким названием отсутствует
             }
@@ -252,6 +260,7 @@ void viewing_compositions()             // Просмотр и удаление 
     int cur_page = 1;
     string arrow;           
     string cash;
+    string cash_2;
 
     while(!flag_esc)
     {
@@ -273,9 +282,11 @@ void viewing_compositions()             // Просмотр и удаление 
             cur_page = current_page(cur_page, arrow);                           // получение номера текущей страницы
             arrow = "";
             int iterator = print_compositions(ptr, cur_page);
-            diagnostic_message(&flag_error, cash);
+            diagnostic_message(&flag_error, cash_2);
             printw("\nДля удаления произведения введите его название или номер: ");
             cash = set_number(&flag_esc, &flag_error, delete_composition, iterator, &arrow);
+            if ((arrow != "left") && (arrow != "right"))
+                cash_2 = cash;
         }
         refresh();
     }
@@ -491,6 +502,7 @@ void viewing_authors()              // Просмотр и удаление ав
     int cur_page = 1;
     string arrow;   
     string cash;
+    string cash_2;
 
     while(!flag_esc)
     {
@@ -512,9 +524,11 @@ void viewing_authors()              // Просмотр и удаление ав
             cur_page = current_page(cur_page, arrow);                           // получение номера текущей страницы
             arrow = "";
             int iterator = print_compositions_with_authors_2(ptr, cur_page);
-            diagnostic_message(&flag_error, cash);
+            diagnostic_message(&flag_error, cash_2);
             printw("\nДля удаления автора введите название произведения или его номер: ");
             cash = set_number(&flag_esc, &flag_error, search_authors, iterator, &arrow);
+            if ((arrow != "left") && (arrow != "right"))
+                cash_2 = cash;
         }
         refresh();
     }
