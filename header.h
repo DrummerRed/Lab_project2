@@ -24,7 +24,7 @@ void viewing_compositions();
 int search_composition(string composition_name);                // Поиск заданного произведения
 void delete_composition(int index);
 void add_author(int index, string author_name);                 // Добавление автора
-int print_compositions_with_authors(composition* ptr);          // Вывод списка произведений с авторами на консоль
+// int print_compositions_with_authors(composition* ptr);          // Вывод списка произведений с авторами на консоль
 void show_list();                                               // Вывод всего списка
 void viewing_authors();                                         // Просмотр и удаление авторов  
 void search_authors(int index);                                 // Поиск авторов для заданного произведения
@@ -32,9 +32,14 @@ int delete_author_interface(composition* ptr);                  // Вывод с
 void delete_author(int index, composition* ptr);                // Удаление авторов
 int count_authors(composition* ptr);                            // подсчет поличества авторов
 void clearing_list();                                           // Очистка списка
-string set_number(bool* flag_esc, bool* flag_empty, int* flag_error, void(*callback)(int), int parameter);   // Ввод номера элемента списка
+string set_number(bool* flag_esc, bool* flag_empty, int* flag_error, void(*callback)(int), int parameter, string* arrow);   // Ввод номера элемента списка
 void output_file_creator(string file_name);                     // Запись списка в файл 
 int count_symbols(string str);                                  // Подсчет количества символов в строке
+int count_elems();                                              // Функция подсчета количества элементов (произведений) списка
+int pages_count();                                              // Подсчет количества страниц
+string transform_ch(int ch);                                    // Обратботка нажатия стрелок при использовании getch()
+int print_compositions_with_authors_2(composition* ptr, int page);       // удалить один из вариантов!!!
+int print_compositions(composition* ptr, int page);             // Вывод списка произведений на консоль
 
 void Menu(char* argv[]);                                        // Главное меню программы
 void interface(int choice);                                     // Отрисовка интерфейса главного меню программы
@@ -43,7 +48,7 @@ void Menu_start_work();                                         // Меню пу
 int Menu_input_for_keyboard();                                  // Меню ввода с клавиатуры
 int choose_operating_mode(int index);                           // Выбор режима работы программы
 int choose_input_mode(int index);                               // Выбор режима ввода с клавиатуры
-string input_string(bool* flag_esc);                            // Ввод строки
+string input_string(bool* flag_esc, string* arrows = nullptr);                            // Ввод строки
 int workaround(unsigned char first, unsigned char second);
 string record_composition();                                    // Ввод произведений
 void record_authors();                                          // Ввод авторов (обновленная логика)

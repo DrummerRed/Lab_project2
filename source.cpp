@@ -309,7 +309,7 @@ string record_composition()                           // Ввод названи
     return composition;
 }
 
-string input_string(bool* flag_esc)                   // Ввод строки
+string input_string(bool* flag_esc, string* arrows)    // Ввод строки
 {                                                     // Возвращает введенную строку при корректном вводе
     string str = "";                                  // При выходе по Esc возвращает пустую строку
     int x, y;
@@ -357,11 +357,26 @@ string input_string(bool* flag_esc)                   // Ввод строки
         {
             *flag_esc = true;
             break;
-        }              
-
+        }
         else if (ch == ENTER)              // Выход при нажатии Enter
             break;
 
+        else if (((ch == KEY_RIGHT) || (ch == KEY_LEFT)) && (arrows != nullptr))         // нажатие стрелок 
+        {
+            if (ch == KEY_RIGHT)
+            {
+                *arrows = "right";
+                break;
+            }
+            else if (ch == KEY_LEFT)
+            {
+                *arrows = "left";
+                break;
+            }
+        }  
+        else if ((ch == UP) || (ch == DOWN) || (ch == KEY_RIGHT) || (ch == KEY_LEFT))
+            continue;
+                 
         else
         {
             str += ch;
