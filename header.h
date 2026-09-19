@@ -32,7 +32,7 @@ int delete_author_interface(composition* ptr);                  // Вывод с
 void delete_author(int index, composition* ptr);                // Удаление авторов
 int count_authors(composition* ptr);                            // подсчет поличества авторов
 void clearing_list();                                           // Очистка списка
-string set_number(bool* flag_esc, bool* flag_empty, int* flag_error, void(*callback)(int), int parameter, string* arrow);   // Ввод номера элемента списка
+string set_number(bool* flag_esc, int* flag_error, void(*callback)(int), int parameter, string* arrow);   // Ввод номера элемента списка
 void output_file_creator(string file_name);                     // Запись списка в файл 
 int count_symbols(string str);                                  // Подсчет количества символов в строке
 int count_elems();                                              // Функция подсчета количества элементов (произведений) списка
@@ -52,7 +52,7 @@ string input_string(bool* flag_esc, string* arrows = nullptr);                  
 int workaround(unsigned char first, unsigned char second);
 string record_composition();                                    // Ввод произведений
 void record_authors();                                          // Ввод авторов (обновленная логика)
-void diagnostic_message(bool* flag_empty, int* flag_error, string cash);          // Вывод диагностического сообщения на экран
+void diagnostic_message(int* flag_error, string cash);          // Вывод диагностического сообщения на экран
 void add_author_interface(int index);                           // Интерфейс добавления авторов к произведению
 int authors_symb(string author);                                // Проверка имени автора на допустимые символы
 int composition_symb(string composition);                       // Проверка названия произведения на допустимые символы
