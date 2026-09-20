@@ -149,7 +149,7 @@ string transform_ch(int ch)                     // Обратботка нажа
     return str;
 }
 
-void diagnostic_message(int* flag_error, string cash)          // Вывод диагностического сообщения на экран
+void diagnostic_message(int* flag_error, string cash, int deleting)          // Вывод диагностического сообщения на экран
 {
     if (*flag_error == 1)
     {
@@ -165,6 +165,12 @@ void diagnostic_message(int* flag_error, string cash)          // Вывод д�
     {
         printw("\nОшибка! Введена пустая строка!");
         // *flag_error = 0;
+    }
+
+    if ((deleting != 0) && (*flag_error == 0))
+    {
+        *flag_error == 4;
+        printw("\nПроизведение %s было удалено", cash.c_str());
     }
 }
 
@@ -221,6 +227,8 @@ string set_number(bool* flag_esc, int* flag_error, void(*callback)(int), int par
                 int index = stoi(cash);
                 if ((index > 0) && (index <= parameter))
                 {
+                    if (callback == delete_composition)
+                        cash = get_composition_and_authors(index);
                     callback(index);
                     *flag_error = 0;
                 }
@@ -229,6 +237,8 @@ string set_number(bool* flag_esc, int* flag_error, void(*callback)(int), int par
                     index = search_composition(cash);                   /////////////
                     if ((index != 0) && (index != -1))
                     {
+                        if (callback == delete_composition)
+                            cash = get_composition_and_authors(index);
                         callback(index);
                         *flag_error = 0;
                     }
@@ -242,6 +252,8 @@ string set_number(bool* flag_esc, int* flag_error, void(*callback)(int), int par
                 int index = search_composition(cash);                   /////////// можно объединить в одну функцию
                 if ((index != 0) && (index != -1))
                 {
+                    if (callback == delete_composition)
+                        cash = get_composition_and_authors(index);
                     callback(index);
                     *flag_error = 0;
                 }
@@ -256,7 +268,7 @@ string set_number(bool* flag_esc, int* flag_error, void(*callback)(int), int par
 void viewing_compositions()             // Просмотр и удаление произведений
 {                                       
     bool flag_esc = false;
-    int flag_error = 0; 
+    int flag_error = 4; 
     int cur_page = 1;
     string arrow;           
     string cash;
@@ -283,7 +295,7 @@ void viewing_compositions()             // Просмотр и удаление 
             arrow = "";
             // int iterator = print_compositions(ptr, cur_page);
             int iterator = print_compositions_with_authors_2(ptr, cur_page);
-            diagnostic_message(&flag_error, cash_2);
+            diagnostic_message(&flag_error, cash_2, 1);
             printw("\nДля удаления произведения введите его название или номер: ");
             cash = set_number(&flag_esc, &flag_error, delete_composition, iterator, &arrow);
             if ((arrow != "left") && (arrow != "right"))
@@ -363,6 +375,32 @@ void add_author(int index, string author_name)                  // Добавл�
         author_ptr->next_ptr = new author;
         author_ptr->next_ptr->name = author_name; 
     }
+}
+
+string get_composition_and_authors(int index)
+{
+    string output = "«";
+    composition* ptr = head_ptr;
+
+    for (int i=1; i<index; i++)
+        ptr = ptr->next_ptr;
+
+    output += (ptr->name);
+    output += "»";
+    author* author_ptr = ptr->author_ptr;
+    if (author_ptr != nullptr)
+    {
+        output += " (";
+        while(author_ptr != nullptr)
+        {
+            output += (author_ptr->name);
+            author_ptr = author_ptr->next_ptr;
+            if (author_ptr != nullptr)
+                output += ", ";
+        }
+        output += ")";
+    }
+    return output;
 }
 
 void add_author_interface(int index)                // Интерфейс добавления авторов к произведению

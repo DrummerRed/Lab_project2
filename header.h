@@ -40,6 +40,7 @@ int pages_count();                                              // Подсче�
 string transform_ch(int ch);                                    // Обратботка нажатия стрелок при использовании getch()
 int print_compositions_with_authors_2(composition* ptr, int page);       // удалить один из вариантов!!!
 int print_compositions(composition* ptr, int page);             // Вывод списка произведений на консоль
+string get_composition_and_authors(int index);
 
 void Menu(char* argv[]);                                        // Главное меню программы
 void interface(int choice);                                     // Отрисовка интерфейса главного меню программы
@@ -52,7 +53,7 @@ string input_string(bool* flag_esc, string* arrows = nullptr);                  
 int workaround(unsigned char first, unsigned char second);
 string record_composition();                                    // Ввод произведений
 void record_authors();                                          // Ввод авторов (обновленная логика)
-void diagnostic_message(int* flag_error, string cash);          // Вывод диагностического сообщения на экран
+void diagnostic_message(int* flag_error, string cash, int deleting = 0);          // Вывод диагностического сообщения на экран
 void add_author_interface(int index);                           // Интерфейс добавления авторов к произведению
 int authors_symb(string author);                                // Проверка имени автора на допустимые символы
 int composition_symb(string composition);                       // Проверка названия произведения на допустимые символы
