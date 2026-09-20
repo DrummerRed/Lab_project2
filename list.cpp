@@ -281,7 +281,8 @@ void viewing_compositions()             // Просмотр и удаление 
         {
             cur_page = current_page(cur_page, arrow);                           // получение номера текущей страницы
             arrow = "";
-            int iterator = print_compositions(ptr, cur_page);
+            // int iterator = print_compositions(ptr, cur_page);
+            int iterator = print_compositions_with_authors_2(ptr, cur_page);
             diagnostic_message(&flag_error, cash_2);
             printw("\nДля удаления произведения введите его название или номер: ");
             cash = set_number(&flag_esc, &flag_error, delete_composition, iterator, &arrow);
@@ -418,6 +419,7 @@ void add_author_interface(int index)                // Интерфейс доб
                 author = "";
             else if (author != "")
             {
+                author = delete_whitespaces(author);
                 if (count_symbols(author) > 40)
                     len_flag = true;
                 else if (authors_symb(author) == 0)

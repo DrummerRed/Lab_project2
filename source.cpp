@@ -289,6 +289,7 @@ string record_composition()                           // Ввод названи
         {
             if (composition != "")
             {
+                composition = delete_whitespaces(composition);
                 if (count_symbols(composition) > 30)
                     len_flag = true;
                 else if (composition_symb(composition) == 0)
@@ -413,6 +414,22 @@ int workaround(unsigned char first, unsigned char second) {             // во�
         return 1;
         
     return 0;
+}
+
+string delete_whitespaces(string str)                     // Удаление пробелов в начале и конце строки
+{
+    if (str[0] == ' ')
+    {
+        while (str[0] == ' ')   
+            str.erase(0, 1);
+    }
+
+    if (str[str.length()-1] == ' ')
+    {
+        while (str[str.length()-1] == ' ')   
+            str.erase(str.length()-1, 1);
+    }
+    return str;
 }
 
 // composition_symb и authors_symb так то можно объединить в одну функцию с каким то параметром
