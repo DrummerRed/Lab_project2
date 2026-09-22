@@ -15,6 +15,8 @@ const int ESC = 27;
 const int ENTER = 10;
 const int DOWN = 258;
 const int UP = 259;
+const int LEFT = 260;
+const int RIGHT = 261;
 
 struct author;
 struct composition;
@@ -39,7 +41,6 @@ int count_elems();                                              // Функци�
 int pages_count();                                              // Подсчет количества страниц
 string transform_ch(int ch);                                    // Обратботка нажатия стрелок при использовании getch()
 int print_compositions_with_authors_2(composition* ptr, int page);       // удалить один из вариантов!!!
-int print_compositions(composition* ptr, int page);             // Вывод списка произведений на консоль
 string get_composition_and_authors(int index);
 
 void Menu(char* argv[]);                                        // Главное меню программы

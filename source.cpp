@@ -377,7 +377,6 @@ string input_string(bool* flag_esc, string* arrows)    // Ввод строки
         }  
         else if ((ch == UP) || (ch == DOWN) || (ch == KEY_RIGHT) || (ch == KEY_LEFT))
             continue;
-                 
         else
         {
             str += ch;

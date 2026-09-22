@@ -142,9 +142,9 @@ int current_page(int current_page, string arrow)                // получе�
 string transform_ch(int ch)                     // Обратботка нажатия стрелок при использовании getch()
 {
     string str = "";
-    if (ch == 260)
+    if (ch == LEFT)
         str = "left";
-    else if (ch == 261)
+    else if (ch == RIGHT)
         str = "right";
     return str;
 }
@@ -152,20 +152,13 @@ string transform_ch(int ch)                     // Обратботка нажа
 void diagnostic_message(int* flag_error, string cash, int deleting)          // Вывод диагностического сообщения на экран
 {
     if (*flag_error == 1)
-    {
         printw("\nОшибка! Введен некорректный номер!");
-        // *flag_error = 0;
-    }
+        
     else if (*flag_error == 2)
-    {
         printw("\nОшибка! Произведение «%s» отсутствует!", cash.c_str());
-        // *flag_error = 0;
-    }
+        
     else if (*flag_error == 3)
-    {
         printw("\nОшибка! Введена пустая строка!");
-        // *flag_error = 0;
-    }
 
     if ((deleting != 0) && (*flag_error == 0))
     {
@@ -293,7 +286,6 @@ void viewing_compositions()             // Просмотр и удаление 
         {
             cur_page = current_page(cur_page, arrow);                           // получение номера текущей страницы
             arrow = "";
-            // int iterator = print_compositions(ptr, cur_page);
             int iterator = print_compositions_with_authors_2(ptr, cur_page);
             diagnostic_message(&flag_error, cash_2, 1);
             printw("\nДля удаления произведения введите его название или номер: ");
@@ -303,28 +295,6 @@ void viewing_compositions()             // Просмотр и удаление 
         }
         refresh();
     }
-}
-
-int print_compositions(composition* ptr, int page)             // Вывод списка произведений на консоль
-{                                                             // Возвращает значение количества произведений в списке
-    int low_index = (page - 1) * COUNT_ON_PAGE + 1;
-    int high_index = page * COUNT_ON_PAGE;
-    
-    int iterator = 0;
-    while(ptr != nullptr)
-    {
-        iterator++;
-
-        if ((low_index <= iterator) && (iterator <= high_index))
-        {
-            string name = ptr->name;
-            printw("%d. %s\n", iterator, name.c_str());
-        }
-        ptr = ptr->next_ptr;
-    }
-    printw("\n\nСтраница: %d из %d\n", page, pages_count());
-
-    return iterator;
 }
 
 int search_composition(string composition_name)                 // Поиск заданного произведения
@@ -716,7 +686,6 @@ void output_file_creator(string file_name)                              // За�
         {
             string composition_name = ptr->name;
             int length_str = count_symbols(composition_name);
-            // file << "[" << composition_name << "]";                         /// старый вариант
             file << "[" << upper_symb(composition_name) << "]";
             file << string(MAX_NAME_LEN - length_str, ' ');
 
@@ -724,10 +693,7 @@ void output_file_creator(string file_name)                              // За�
             while(author_ptr != nullptr)
             {
                 string author_name = author_ptr->name;
-                
-                // file << " " << author_name;             /// изменил вместо комментариев (старый вариант)
                 file << "  " << upper_symb(author_name);
-
                 author_ptr = author_ptr->next_ptr;
             }
             ptr = ptr->next_ptr;
