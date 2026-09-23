@@ -430,7 +430,7 @@ void add_author_interface(int index)                // Интерфейс доб
                 author = delete_whitespaces(author);
                 if (count_symbols(author) > 40)
                     len_flag = true;
-                else if (authors_symb(author) == 0)
+                else if (allowed_symb(author, "author") == 0) 
                 {
                     author = upper_symb(author);
                     add_author(index, author);

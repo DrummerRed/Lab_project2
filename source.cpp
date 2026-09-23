@@ -67,7 +67,7 @@ void interface(int choice)      // Отрисовка интерфейса гл�
 void Help()             // Функция работы пункта меню "Помощь"
 {
     int ch = 0;
-    while(ch != ESC)
+    while (ch != ESC)
     {
         clear();
 
@@ -102,7 +102,7 @@ void Help()             // Функция работы пункта меню "П
 void Menu_start_work()                              // Меню пункта "Начать работу"
 {                                                           
     int choice_operating = 0;
-    while(choice_operating != -1)
+    while (choice_operating != -1)
     {
         choice_operating = choose_operating_mode(choice_operating);         // Выбор режима работы (клавиатура/чтение файла)
 
@@ -244,43 +244,16 @@ int choose_input_mode(int index)                    // Выбор режима �
 string record_composition()                           // Ввод названия произведений
 {                                                     // Возвращает пустую строку при нажатии Esc
     bool flag_esc = false; 
-    bool empty_flag = false;
-    bool symbols_flag = false;
-    bool len_flag = false;                              // Диагностические сообщения можно перенести в отдельную функцию с парам-ми - флагами
-    bool repeat_flag = false;
+    int flag_error = 0;
     string composition;                                     
     for (int i=0; flag_esc!=true; i++)
     {
         clear();
         printw("Для возвращения нажмите Esc\n");
         printw("---------------------------\n\n");
-        if (empty_flag)
-        {
-            printw("Ошибка! Некорректный ввод!\n");
-            empty_flag = false;
-        }
-        else if (len_flag)
-        {
-            printw("Ошибка! Строка не должна содержать больше 30 символов!\n");
-            len_flag = false;
-        }
-        else if (symbols_flag)
-        {
-            printw("Ошибка! Название может содержать только:\n");
-            printw("- цифры\n- буквы латинского и русского алфавитов\n- знак пробела в виде разделителя\n\n");
-            symbols_flag = false;
-        }
-        else if (repeat_flag)
-        {
-            printw("Ошибка! Произведение «%s» уже записано!\n", composition.c_str());
-            repeat_flag = false;
-        }
-        else if (i>0)
-        {
-            printw("Произведение «%s» успешно записано\n", composition.c_str());
-        }
-        printw("Введите название произведения: ");
 
+        rec_composition_messages(&flag_error, composition, i);
+        printw("Введите название произведения: ");
         composition = input_string(&flag_esc);
 
         if (flag_esc)
@@ -291,23 +264,50 @@ string record_composition()                           // Ввод названи
             {
                 composition = delete_whitespaces(composition);
                 if (count_symbols(composition) > 30)
-                    len_flag = true;
-                else if (composition_symb(composition) == 0)
+                    flag_error = 2;
+                else if (allowed_symb(composition, "composition") == 0)    
                 {
                     composition = upper_symb(composition);
                     if ((search_composition(composition) == 0) || (search_composition(composition) == -1))
                         add_composition(composition);
                     else
-                        repeat_flag = true;
+                        flag_error = 4;                 // Данное произведение уже записано
                 }
                 else 
-                    symbols_flag = true;
+                    flag_error = 3;
             }
             else
-                empty_flag = true;
+                flag_error = 1;
         }
     }
     return composition;
+}
+
+void rec_composition_messages(int* flag_error, string composition, int iterator)    // Вывод диагностических сообщений 
+{                                                                                   // в процессе ввода произведений
+    if (*flag_error == 1)                                 // Если введена пустая строка
+    {
+        printw("Ошибка! Введена пустая строка!\n");
+        *flag_error = 0;
+    }
+    else if (*flag_error == 2)                                  // Если строка превышает размер
+    {
+        printw("Ошибка! Строка не должна содержать больше 30 символов!\n");
+        *flag_error = 0;
+    }
+    else if (*flag_error == 3)                               // Некорректные символы
+    {
+        printw("Ошибка! Название может содержать только:\n");
+        printw("- цифры\n- буквы латинского и русского алфавитов\n- знак пробела в виде разделителя\n\n");
+        *flag_error = 0;
+    }
+    else if (*flag_error == 4)                                   // Данное произведение уже записано
+    {
+        printw("Ошибка! Произведение «%s» уже записано!\n", composition.c_str());
+        *flag_error = 0;
+    }
+    else if (iterator > 0)
+        printw("Произведение «%s» успешно записано\n", composition.c_str());
 }
 
 string input_string(bool* flag_esc, string* arrows)    // Ввод строки
@@ -431,66 +431,37 @@ string delete_whitespaces(string str)                     // Удаление п
     return str;
 }
 
-// composition_symb и authors_symb так то можно объединить в одну функцию с каким то параметром
-int composition_symb(string composition)                    // Проверка названия произведения на допустимые символы
-{                                                           // Возвращает 0 при корректном названии
-    string rus_low = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";       // Возвращает 1, если присутствуют недопустимые символы
+int allowed_symb(string str, string choice)                     // Проверка названия произведения на допустимые символы
+{                                                                               // Возвращает 0 при корректном названии
+    string rus_low = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";                       // Возвращает 1, если присутствуют недопустимые символы
     string rus_high = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ0123456789.,?!-:; ";
-    string eng_high = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    string eng_low = "abcdefghijklmnopqrstuvwxyz";
-    int length = composition.length();                      
+    string rus_high_for_authors = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ- ";
+    string eng_high = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";                          
+    string eng_low = "abcdefghijklmnopqrstuvwxyz";                              // Если choice == "author", используем для проверки автора
+    int length = str.length();                      
     int invalid_symb = 0;
 
-    if (composition.find("  ") != -1)
+    if (choice == "author")
+        rus_high = rus_high_for_authors;
+
+    if (str.find("  ") != -1)
         invalid_symb = 1;
 
-    else if ((composition[length-1] == ' ') || (composition[0] == ' '))
+    else if ((str[length-1] == ' ') || (str[0] == ' '))
         invalid_symb = 1;
 
     else
     {
         for (int i=0; i<length; i++)
         {
-            if ((rus_low.find(composition[i]) == -1) && (rus_high.find(composition[i]) == -1)
-                && (eng_high.find(composition[i]) == -1) && (eng_low.find(composition[i]) == -1))
+            if ((rus_low.find(str[i]) == -1) && (rus_high.find(str[i]) == -1)
+                && (eng_high.find(str[i]) == -1) && (eng_low.find(str[i]) == -1))
             {
                 invalid_symb = 1;
                 break;
             }
         }
     }
-    
-    return invalid_symb;
-}
-
-int authors_symb(string author)                 // Проверка имени автора на допустимые символы
-{                                               // Возвращает 0 при корректном имени, 1 при некорректном
-    string rus_low = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
-    string rus_high = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ- ";
-    string eng_high = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    string eng_low = "abcdefghijklmnopqrstuvwxyz";
-    int length = author.length();
-    int invalid_symb = 0;
-
-    if (author.find("  ") != -1)
-        invalid_symb = 1;
-
-    else if ((author[length-1] == ' ') || (author[0] == ' '))
-        invalid_symb = 1;
-
-    else
-    {
-        for (int i=0; i<length; i++)
-        {
-            if ((rus_low.find(author[i]) == -1) && (rus_high.find(author[i]) == -1)
-                && (eng_high.find(author[i]) == -1) && (eng_low.find(author[i]) == -1))
-            {
-                invalid_symb = 1;
-                break;
-            }
-        }
-    }
-
     return invalid_symb;
 }
 

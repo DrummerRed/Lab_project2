@@ -53,11 +53,11 @@ int choose_input_mode(int index);                               // Выбор р
 string input_string(bool* flag_esc, string* arrows = nullptr);                            // Ввод строки
 int workaround(unsigned char first, unsigned char second);
 string record_composition();                                    // Ввод произведений
+void rec_composition_messages(int* flag_error, string composition, int iterator);    // Вывод диагностических сообщений 
 void record_authors();                                          // Ввод авторов (обновленная логика)
 void diagnostic_message(int* flag_error, string cash, int deleting = 0);          // Вывод диагностического сообщения на экран
 void add_author_interface(int index);                           // Интерфейс добавления авторов к произведению
-int authors_symb(string author);                                // Проверка имени автора на допустимые символы
-int composition_symb(string composition);                       // Проверка названия произведения на допустимые символы
+int allowed_symb(string str, string choice);                    // Проверка названия произведения или имени автора на допустимые символы
 int file_name_symb(string file_name);                           // Проверка названия файла на допустимые символы
 int numbers_symb(string number);                                // Проверка введенного номера на допустимые символы
 string delete_whitespaces(string str);                          // Удаление пробелов в начале и конце строки
