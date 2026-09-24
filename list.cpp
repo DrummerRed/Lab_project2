@@ -83,8 +83,7 @@ void delete_composition(int index)          /// Стоит дописать ос
             prev_ptr->next_ptr = next_ptr;
             delete ptr;
         }
-    }
-    
+    } 
 }
 
 void clearing_list()                    // Очистка списка
@@ -167,8 +166,8 @@ void diagnostic_message(int* flag_error, string cash, int deleting)          // 
     }
 }
 
-void record_authors()                               // Ввод авторов (обновленная логика)
-{                                       
+void record_or_viewing_authors(string message_1, string message_2, void(*callback)(int))   // Функционал для пунктов меню: 
+{                                                                                          // "Добавление авторов", "Просмотр и удаление авторов"
     bool flag_esc = false;
     int flag_error = 0;  
     int cur_page = 1;
@@ -186,7 +185,7 @@ void record_authors()                               // Ввод авторов (
         
         if (ptr == nullptr)
         {
-            printw("Записи о произведениях отсутствуют, добавление недоступно!");
+            printw("%s", message_1.c_str());
             int ch = getch();
             if (ch == ESC)
                 break;
@@ -197,13 +196,20 @@ void record_authors()                               // Ввод авторов (
             arrow = "";
             int iterator = print_compositions_with_authors_2(ptr, cur_page);
             diagnostic_message(&flag_error, cash_2);
-            printw("\nДля добавления автора введите название произведения или его номер: ");
-            cash = set_number(&flag_esc, &flag_error, add_author_interface, iterator, &arrow);
+            printw("%s", message_2.c_str());
+            cash = set_number(&flag_esc, &flag_error, callback, iterator, &arrow);
             if ((arrow != "left") && (arrow != "right"))
                 cash_2 = cash;
         }
         refresh();
     }
+}
+
+void record_authors()                               // Добавление авторов (обновленная логика)
+{
+    string message_1 = "Записи о произведениях отсутствуют, добавление недоступно!";
+    string message_2 = "\nДля добавления автора введите название произведения или его номер: ";
+    record_or_viewing_authors(message_1, message_2, add_author_interface);
 }
 
 string set_number(bool* flag_esc, int* flag_error, void(*callback)(int), int parameter, string* arrow)   // Ввод номера элемента списка
@@ -505,43 +511,11 @@ void show_list()                            // Вывод всего списк�
     }
 }             
 
-void viewing_authors()              // Просмотр и удаление авторов       
-{                                       
-    bool flag_esc = false;
-    int flag_error = 0;
-    int cur_page = 1;
-    string arrow;   
-    string cash;
-    string cash_2;
-
-    while(!flag_esc)
-    {
-        clear();
-        printw("Для возвращения нажмите Esc\n");
-        printw("---------------------------\n\n");
-
-        composition* ptr = head_ptr;
-
-        if (ptr == nullptr)
-        {
-            printw("Записи о произведениях отсутствуют");
-            int ch = getch();
-            if (ch == ESC)
-                break;
-        }
-        else
-        {
-            cur_page = current_page(cur_page, arrow);                           // получение номера текущей страницы
-            arrow = "";
-            int iterator = print_compositions_with_authors_2(ptr, cur_page);
-            diagnostic_message(&flag_error, cash_2);
-            printw("\nДля удаления автора введите название произведения или его номер: ");
-            cash = set_number(&flag_esc, &flag_error, search_authors, iterator, &arrow);
-            if ((arrow != "left") && (arrow != "right"))
-                cash_2 = cash;
-        }
-        refresh();
-    }
+void viewing_authors()              // Просмотр и удаление авторов  
+{
+    string message_1 = "Записи о произведениях отсутствуют";
+    string message_2 = "\nДля удаления автора введите название произведения или его номер: ";
+    record_or_viewing_authors(message_1, message_2, search_authors);
 }
 
 void search_authors(int index)                   // Поиск авторов для заданного произведения

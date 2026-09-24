@@ -54,6 +54,7 @@ string input_string(bool* flag_esc, string* arrows = nullptr);                  
 int workaround(unsigned char first, unsigned char second);
 string record_composition();                                    // Ввод произведений
 void rec_composition_messages(int* flag_error, string composition, int iterator);    // Вывод диагностических сообщений 
+void record_or_viewing_authors(string message_1, string message_2, void(*callback)(int));   // Функционал для пунктов меню: "Добавление авторов", "Просмотр и удаление авторов"
 void record_authors();                                          // Ввод авторов (обновленная логика)
 void diagnostic_message(int* flag_error, string cash, int deleting = 0);          // Вывод диагностического сообщения на экран
 void add_author_interface(int index);                           // Интерфейс добавления авторов к произведению
@@ -65,11 +66,11 @@ string delete_whitespaces(string str);                          // Удален�
 void file_reader_interface();                                   // Выбор режима "Чтение из файла"
 string file_name_input();                                       // Считывание имени файла
 int file_checker(string file_name);                             // Функция проверки существования рабочего файла программы
-int string_counter(string file_name);                           // Подсчет количества строк в файле
 int file_parser(string file_name);                              // Парсинг входного файла
 void authors_parser(int index, string str);                     // Парсинг авторов
 void interface_of_parsing(string file_name);                    // Функция показа сообщения о завершении парсинга
 string file_name_output();                                      // Считывание имени выходного файла
+void file_name_output_message(int* checker, int* flag_error);   // Вывод диагностического сообщения при вводе имени выходного файла
 void file_creator_interface();                                  // Меню создания выходного файла
 void output_file_info(string file_name);                        // Вывод информации о записанном файле
 string upper_symb(const string& str);                           // Преобразование к верхнему регистру

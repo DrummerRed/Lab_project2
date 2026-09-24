@@ -110,24 +110,6 @@ int file_checker(string file_name)          // Функция проверки �
     }
 }
 
-int string_counter(string file_name)                    // Подсчет количества строк в файле
-{                                                       // Возвращает количество строк
-    string buffer;                                      // При ошибке открытия файла возвращает -1
-    int counter = 0;    
-
-    ifstream file;
-    file.open(file_name);
-    if (!file.is_open())                  
-        counter = -1;
-    else
-    {
-        while(getline(file, buffer))
-            counter++;
-        file.close();
-    }
-    return counter;             // А нужна ли эта функция вообще???
-}
-
 int file_parser(string file_name)                       // Парсинг входного файла
 {                                                       // Возвращает 1 при ошибке открытия файла
     ifstream file;                                      // Возвращает 2 при некорректной структуре файла
@@ -186,7 +168,7 @@ int file_parser(string file_name)                       // Парсинг вхо
 void authors_parser(int index, string str)              // парсинг авторов
 {
     string author;
-    while(str != "")
+    while (str != "")
     {
         author = str;
         int i = 0;
@@ -209,7 +191,7 @@ void interface_of_parsing(string file_name)                     // Функци�
 {
     int result = file_parser(file_name);
     int ch = 0;
-    while(ch != ESC)
+    while (ch != ESC)
     {
         clear();
         printw("Для возвращения нажмите Esc\n");
@@ -231,31 +213,15 @@ string file_name_output()                            // Считывание и�
 {                                                   // Возвращает имя файл, если такое имя корректно
     bool flag_esc = false;                          // При выходе по ESC возвращает пустую строку
     int checker = 1;
-    bool empty_flag = false;
-    bool file_name_error = false;
+    int flag_error = 0;
     string file_name;
-    while(!flag_esc)
+    while (!flag_esc)
     {
         clear();
         printw("Для возвращения нажмите Esc\n");
         printw("---------------------------\n\n");
 
-        if (checker != 1)
-        {
-            printw("Ошибка! Файл с данным названием уже существует! Выберите другое имя файла!\n");
-            checker = 1;
-        }
-        else if (empty_flag)
-        {
-            printw("Ошибка ввода! Введите имя файла!\n");
-            empty_flag = false; 
-        }
-        else if (file_name_error)
-        {
-            printw("%s\n", "Ошибка ввода! Имя файла не может содержать служебные символы: \\&;|*?`[]()$<>{}^#/%!\'\"");
-            file_name_error = false;
-        }
-        
+        file_name_output_message(&checker, &flag_error);
         printw("Введите имя файла: ");
 
         file_name = input_string(&flag_esc);
@@ -267,10 +233,10 @@ string file_name_output()                            // Считывание и�
         else
         {
             if (file_name == ".txt")
-                empty_flag = true;
+                flag_error = 1;
 
             else if (file_name_symb(file_name) == 1)
-                file_name_error = true;
+                flag_error = 2;
 
             else
             {
@@ -282,6 +248,25 @@ string file_name_output()                            // Считывание и�
         }
     }
     return file_name;
+}
+
+void file_name_output_message(int* checker, int* flag_error)        // Вывод диагностического сообщения при вводе имени выходного файла
+{
+    if (*checker != 1)
+    {
+        printw("Ошибка! Файл с данным названием уже существует! Выберите другое имя файла!\n");
+        *checker = 1;
+    }
+    else if (*flag_error == 1)
+    {
+        printw("Ошибка ввода! Введите имя файла!\n");
+        *flag_error = 0; 
+    }
+    else if (*flag_error == 2)
+    {
+        printw("%s\n", "Ошибка ввода! Имя файла не может содержать служебные символы: \\&;|*?`[]()$<>{}^#/%!\'\"");
+        *flag_error = 0;
+    }
 }
 
 void file_creator_interface()                      // Меню создания выходного файла
