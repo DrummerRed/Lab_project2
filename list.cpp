@@ -166,14 +166,17 @@ void diagnostic_message(int* flag_error, string cash, int deleting)          // 
     }
 }
 
-void record_or_viewing_authors(string message_1, string message_2, void(*callback)(int))   // Функционал для пунктов меню: 
-{                                                                                          // "Добавление авторов", "Просмотр и удаление авторов"
+void record_or_viewing(string message_1, string message_2, void(*callback)(int), bool viewing_compositions)    
+{                                                   // Функционал для пунктов меню: "Добавление авторов", "Просмотр и удаление авторов"
     bool flag_esc = false;
     int flag_error = 0;  
     int cur_page = 1;
     string arrow;
     string cash;
     string cash_2;
+
+    if (viewing_compositions)
+        flag_error = 4;
 
     while(!flag_esc)
     {
@@ -195,7 +198,11 @@ void record_or_viewing_authors(string message_1, string message_2, void(*callbac
             cur_page = current_page(cur_page, arrow);                           // получение номера текущей страницы
             arrow = "";
             int iterator = print_compositions_with_authors_2(ptr, cur_page);
-            diagnostic_message(&flag_error, cash_2);
+
+            if (viewing_compositions)
+                diagnostic_message(&flag_error, cash_2, 1);
+            else
+                diagnostic_message(&flag_error, cash_2);
             printw("%s", message_2.c_str());
             cash = set_number(&flag_esc, &flag_error, callback, iterator, &arrow);
             if ((arrow != "left") && (arrow != "right"))
@@ -209,7 +216,7 @@ void record_authors()                               // Добавление ав
 {
     string message_1 = "Записи о произведениях отсутствуют, добавление недоступно!";
     string message_2 = "\nДля добавления автора введите название произведения или его номер: ";
-    record_or_viewing_authors(message_1, message_2, add_author_interface);
+    record_or_viewing(message_1, message_2, add_author_interface);
 }
 
 string set_number(bool* flag_esc, int* flag_error, void(*callback)(int), int parameter, string* arrow)   // Ввод номера элемента списка
@@ -265,42 +272,10 @@ string set_number(bool* flag_esc, int* flag_error, void(*callback)(int), int par
 }
 
 void viewing_compositions()             // Просмотр и удаление произведений
-{                                       
-    bool flag_esc = false;
-    int flag_error = 4; 
-    int cur_page = 1;
-    string arrow;           
-    string cash;
-    string cash_2;
-
-    while(!flag_esc)
-    {
-        clear();
-        printw("Для возвращения нажмите Esc\n");
-        printw("---------------------------\n\n");
-
-        composition* ptr = head_ptr;
-
-        if (ptr == nullptr)
-        {
-            printw("Записи о произведениях отсутствуют");
-            int ch = getch();
-            if (ch == ESC)
-                break;
-        }
-        else
-        {
-            cur_page = current_page(cur_page, arrow);                           // получение номера текущей страницы
-            arrow = "";
-            int iterator = print_compositions_with_authors_2(ptr, cur_page);
-            diagnostic_message(&flag_error, cash_2, 1);
-            printw("\nДля удаления произведения введите его название или номер: ");
-            cash = set_number(&flag_esc, &flag_error, delete_composition, iterator, &arrow);
-            if ((arrow != "left") && (arrow != "right"))
-                cash_2 = cash;
-        }
-        refresh();
-    }
+{
+    string message_1 = "Записи о произведениях отсутствуют";
+    string message_2 = "\nДля удаления произведения введите его название или номер: ";
+    record_or_viewing(message_1, message_2, delete_composition, true);
 }
 
 int search_composition(string composition_name)                 // Поиск заданного произведения
@@ -515,7 +490,7 @@ void viewing_authors()              // Просмотр и удаление ав
 {
     string message_1 = "Записи о произведениях отсутствуют";
     string message_2 = "\nДля удаления автора введите название произведения или его номер: ";
-    record_or_viewing_authors(message_1, message_2, search_authors);
+    record_or_viewing(message_1, message_2, search_authors);
 }
 
 void search_authors(int index)                   // Поиск авторов для заданного произведения

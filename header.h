@@ -54,7 +54,7 @@ string input_string(bool* flag_esc, string* arrows = nullptr);                  
 int workaround(unsigned char first, unsigned char second);
 string record_composition();                                    // Ввод произведений
 void rec_composition_messages(int* flag_error, string composition, int iterator);    // Вывод диагностических сообщений 
-void record_or_viewing_authors(string message_1, string message_2, void(*callback)(int));   // Функционал для пунктов меню: "Добавление авторов", "Просмотр и удаление авторов"
+void record_or_viewing(string message_1, string message_2, void(*callback)(int), bool viewing_compositions=false);   // Функционал для пунктов меню: "Добавление авторов", "Просмотр и удаление авторов"
 void record_authors();                                          // Ввод авторов (обновленная логика)
 void diagnostic_message(int* flag_error, string cash, int deleting = 0);          // Вывод диагностического сообщения на экран
 void add_author_interface(int index);                           // Интерфейс добавления авторов к произведению
