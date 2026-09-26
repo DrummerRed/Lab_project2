@@ -42,6 +42,12 @@ int pages_count();                                              // Подсче�
 string transform_ch(int ch);                                    // Обратботка нажатия стрелок при использовании getch()
 int print_compositions_with_authors_2(composition* ptr, int page);       // удалить один из вариантов!!!
 string get_composition_and_authors(int index);
+composition* get_ptr_by_index(int index);                       // Получение указателя на произведение по индексу
+int find_min(int index);                                        // Поиск минимального элемента
+int find_max(int index);                                        // Поиск максимального элемента
+void swap_elems(int first_index, int second_index);             // Обмен элементов
+void delete_branch(composition* ptr);                           // Удаление элементов ветви
+void stub();                // удалить!
 
 void Menu(char* argv[]);                                        // Главное меню программы
 void interface(int choice);                                     // Отрисовка интерфейса главного меню программы

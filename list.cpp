@@ -670,3 +670,112 @@ int count_symbols(string str)                   // Подсчет количес
     }
     return count;
 }
+
+composition* get_ptr_by_index(int index)                        // Получение указателя на произведение по индексу
+{                                                               // Возвращает указатель на произведение
+    composition* ptr = head_ptr;
+    for (int i=1; i<index; i++)
+        ptr = ptr->next_ptr;
+    return ptr;
+}
+
+int find_min(int index)                                         // Поиск минимального элемента
+{                                                               // Возвращает индекс найденного элемента
+    composition* ptr = get_ptr_by_index(index);                 // на вход принимает индекс, с которого начинается поиск
+    string temp = ptr->name;
+    int index_temp = index;
+    int all_elems = count_elems();
+    
+    for (int i=index+1; i<=all_elems; i++)
+    {
+        ptr = ptr->next_ptr;
+        if (ptr->name < temp)
+        {
+            temp = ptr->name;
+            index_temp = i;
+        }
+    }
+    return index_temp;
+}
+
+int find_max(int index)                                         // Поиск максимального элемента
+{                                                               // Возвращает индекс найденного элемента
+    composition* ptr = get_ptr_by_index(index);                 // на вход принимает индекс, с которого начинается поиск
+    string temp = ptr->name;
+    int index_temp = index;
+    int all_elems = count_elems();
+    
+    for (int i=index+1; i<=all_elems; i++)
+    {
+        ptr = ptr->next_ptr;
+        if (ptr->name > temp)
+        {
+            temp = ptr->name;
+            index_temp = i;
+        }
+    }
+    return index_temp;
+}
+
+void swap_elems(int first_index, int second_index)                       // Обмен элементов
+{
+    if (first_index < second_index)
+    {
+        composition* first_ptr = get_ptr_by_index(first_index); 
+        composition* second_ptr = get_ptr_by_index(second_index);
+
+        composition* temp_ptr = new composition;
+        temp_ptr->author_ptr = first_ptr->author_ptr;
+        temp_ptr->name = first_ptr->name;
+        temp_ptr->next_ptr = first_ptr->next_ptr;
+
+        composition* first_next_ptr = first_ptr->next_ptr;
+        composition* second_prev_ptr = get_ptr_by_index(second_index - 1);
+        composition* second_next_ptr = second_ptr->next_ptr;
+
+        if (first_index == 1)
+            head_ptr = second_ptr;
+        else
+        {
+            composition* first_prev_ptr = get_ptr_by_index(first_index - 1);
+            first_prev_ptr->next_ptr = second_ptr;
+        }
+
+        if ((second_index - first_index) > 1)                   // Если элементы не "соседние"
+        {
+            second_ptr->next_ptr = first_next_ptr;
+            second_prev_ptr->next_ptr = temp_ptr;
+        }
+        else                                                    // Если элементы "соседние"
+            second_ptr->next_ptr = temp_ptr;
+
+        temp_ptr->next_ptr = second_next_ptr;
+        delete first_ptr;   
+    }
+}
+
+// void delete_branch(composition* ptr)                   // Удаление элементов ветви
+// {
+//     int count = count_authors(ptr);
+//     for (int i=1; i<=count; i++)
+//         delete_author(1, ptr);
+// }
+
+void stub()                // удалить!
+{
+    int ch= 0;
+    // int index = 1;
+    
+    int index = find_max(2);
+
+    // swap_elems(14, 15);
+    composition* ptr = get_ptr_by_index(index);
+    string composition = ptr->name;
+    while (ch != 27)
+    {
+        clear();
+        printw("%s", composition.c_str());
+        refresh();
+        ch = getch();
+    }
+}
