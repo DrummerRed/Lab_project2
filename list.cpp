@@ -754,28 +754,29 @@ void swap_elems(int first_index, int second_index)                       // Об
     }
 }
 
+void ascending_sort()                                           // Сортировка по возрастанию
+{
+    int all_elems = count_elems();
+    for (int i=1; i<all_elems; i++)
+    {
+        int min_elem_idx = find_min(i);
+        swap_elems(i, min_elem_idx);
+    }
+}
+
+void descending_sort()                                           // Сортировка по убыванию
+{
+    int all_elems = count_elems();
+    for (int i=1; i<all_elems; i++)
+    {
+        int max_elem_idx = find_max(i);
+        swap_elems(i, max_elem_idx);
+    }
+}
+
 // void delete_branch(composition* ptr)                   // Удаление элементов ветви
 // {
 //     int count = count_authors(ptr);
 //     for (int i=1; i<=count; i++)
 //         delete_author(1, ptr);
 // }
-
-void stub()                // удалить!
-{
-    int ch= 0;
-    // int index = 1;
-    
-    int index = find_max(2);
-
-    // swap_elems(14, 15);
-    composition* ptr = get_ptr_by_index(index);
-    string composition = ptr->name;
-    while (ch != 27)
-    {
-        clear();
-        printw("%s", composition.c_str());
-        refresh();
-        ch = getch();
-    }
-}

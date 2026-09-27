@@ -126,7 +126,7 @@ void Menu_start_work()                              // Меню пункта "Н
         }
 
         else if (choice_operating == 3)                     // Выбор режима "Сортировка произведений"
-            stub();
+            menu_for_sorting();
 
         else if (choice_operating == 5)                     // Выбор режима "Просмотр записей"
         {
@@ -504,4 +504,82 @@ int numbers_symb(string number)                     // Проверка введ
     }
 
     return invalid_symb;
+}
+
+int interace_for_sorting()                         // Отрисовка раздела "Сортировка произведений"
+{
+    int index = 0;
+    int ch = 0;
+
+    while (ch != ESC)
+    {
+        clear();
+        printw("Для возвращения нажмите Esc\n");
+        printw("---------------------------\n\n");
+
+        if (list_is_empty())
+        {
+            printw("Записи о произведениях отсутствуют, сортировка недоступна!");
+            index = -1;
+            ch = getch();
+        }
+        else
+        {
+            printw("Выберите способ сортировки:\n\n");
+
+            string variants[2] = {"По возрастанию", "По убыванию"};
+            for (int i=0; i<2; i++)
+            {
+                if (i == index)
+                    printw("<< %s >>\n", variants[i].c_str());
+                else 
+                    printw(" %s \n", variants[i].c_str());
+            }
+            ch = getch();
+            if (ch == DOWN)
+            {
+                if (index == 0)
+                    index = 1;
+                else
+                    index = 0;
+            }
+            else if (ch == UP)
+            {
+                if (index == 0)
+                    index = 1;
+                else
+                    index = 0;
+            }
+            else if (ch == ENTER)                       
+                break;
+            else if (ch == ESC)
+                index = -1;
+        }
+        refresh();
+    }
+    return index;
+}
+
+void menu_for_sorting()                                     // Меню сортировки
+{
+    int choice = interace_for_sorting();
+    if (choice != -1)
+    {
+        string variants[2] = {"по возрастанию", "по убыванию"};
+
+        if (choice == 0)
+            ascending_sort();                               // Сортировка по возрастанию
+        else if (choice == 1)
+            descending_sort();                              // Сортировка по убыванию
+
+        int ch = 0;
+        while (ch != ESC)
+        {
+            clear();
+            printw("Для возвращения нажмите Esc\n");
+            printw("---------------------------\n\n");
+            printw("Список отсортирован %s.", variants[choice].c_str());
+            ch = getch();
+        }
+    }
 }

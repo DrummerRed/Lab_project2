@@ -47,7 +47,8 @@ int find_min(int index);                                        // Поиск м
 int find_max(int index);                                        // Поиск максимального элемента
 void swap_elems(int first_index, int second_index);             // Обмен элементов
 void delete_branch(composition* ptr);                           // Удаление элементов ветви
-void stub();                // удалить!
+void ascending_sort();                                          // Сортировка по возрастанию
+void descending_sort();                                         // Сортировка по убыванию
 
 void Menu(char* argv[]);                                        // Главное меню программы
 void interface(int choice);                                     // Отрисовка интерфейса главного меню программы
@@ -68,6 +69,8 @@ int allowed_symb(string str, string choice);                    // Провер�
 int file_name_symb(string file_name);                           // Проверка названия файла на допустимые символы
 int numbers_symb(string number);                                // Проверка введенного номера на допустимые символы
 string delete_whitespaces(string str);                          // Удаление пробелов в начале и конце строки
+int interace_for_sorting();                                     // Отрисовка раздела "Сортировка произведений"
+void menu_for_sorting();                                        // Меню сортировки
 
 void file_reader_interface();                                   // Выбор режима "Чтение из файла"
 string file_name_input();                                       // Считывание имени файла
