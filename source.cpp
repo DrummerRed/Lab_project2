@@ -116,22 +116,19 @@ void Menu_start_work()                              // Меню пункта "Н
         }
 
         else if (choice_operating == 1)                     // Выбор режима "Чтение из файла"
-        {
             file_reader_interface();                    
-        }
 
         else if (choice_operating == 2)                     // Выбор режима "Сохранение в файл"
-        {
             file_creator_interface();                  
-        }
 
         else if (choice_operating == 3)                     // Выбор режима "Сортировка произведений"
             menu_for_sorting();
 
+        else if (choice_operating == 4)
+            interface_for_search_by_author();
+
         else if (choice_operating == 5)                     // Выбор режима "Просмотр записей"
-        {
             show_list();
-        }
     }
 }
 
@@ -582,4 +579,41 @@ void menu_for_sorting()                                     // Меню сорт
             ch = getch();
         }
     }
+}
+
+void clear_and_print()                      // Вывод подсказки пользователя на экран
+{
+    clear();
+    printw("Для возвращения нажмите Esc\n");
+    printw("---------------------------\n\n");
+}
+
+string interface_for_search_by_author()                 // Интерфейс раздела поиск по автору
+{                                                       // возвращает имя автора, введенное пользователем
+    string author;                                      // при выходе по ESC возвращает пустую строку
+    int ch = 0;
+    if (list_is_empty())
+    {
+        while(ch != ESC)
+        {
+            clear_and_print();
+            printw("Записи о произведения отсутствуют, поиск недоступен!");
+            ch = getch();
+        }
+    }
+    else
+    {
+        bool flag_esc = false;
+        while (!flag_esc)
+        {
+            clear_and_print();
+            ///// diagnostic
+            ///// func of string
+            printw("Введите имя автора:");
+            author = input_string(&flag_esc);
+            // if (author != "")        // и если не включен флаг еsc
+                ///////
+        }
+    }
+    return author;
 }

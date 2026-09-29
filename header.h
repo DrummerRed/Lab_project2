@@ -71,6 +71,8 @@ int numbers_symb(string number);                                // Провер�
 string delete_whitespaces(string str);                          // Удаление пробелов в начале и конце строки
 int interace_for_sorting();                                     // Отрисовка раздела "Сортировка произведений"
 void menu_for_sorting();                                        // Меню сортировки
+void clear_and_print();                                         // Вывод подсказки пользователя на экран
+string interface_for_search_by_author();                        // Интерфейс раздела поиск по автору
 
 void file_reader_interface();                                   // Выбор режима "Чтение из файла"
 string file_name_input();                                       // Считывание имени файла

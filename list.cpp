@@ -780,3 +780,8 @@ void descending_sort()                                           // Сортир
 //     for (int i=1; i<=count; i++)
 //         delete_author(1, ptr);
 // }
+
+void compositions_by_author()
+{
+    
+}
