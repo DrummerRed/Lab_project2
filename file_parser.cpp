@@ -334,3 +334,20 @@ string upper_symb(const string& str)                // Преобразован�
 
     return result;
 }
+
+// string upper_symb(const string& str)     // Преобразование к верхнему регистру
+// {                                        // Перевод исходной строки в "широкие" символы для повышения регистра
+//     int len = str.length() + 1;       // затем обратный перевод готовой строки
+//     wchar_t wide_buf[len];
+//     int real_len = mbstowcs(wide_buf, str.c_str(), len);    // перевод в "широкие" символы
+//                                                             // отдельный символ -> отдельный элемент массива buf
+//     for (int i=0; i<real_len; i++)
+//         wide_buf[i] = towupper(wide_buf[i]);
+
+//     char buf[len];
+//     int bytes_len = wcstombs(buf, wide_buf, len);           // обратный перевод из "широких" символов
+
+//     string result(buf, bytes_len);
+
+//     return result;
+// }

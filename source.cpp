@@ -315,20 +315,20 @@ string input_string(bool* flag_esc, string* arrows)    // Ввод строки
                 int len = str.length();
                 if (len > 1)
                 {
-                    unsigned char first =  str[len - 2];
+                    unsigned char first = str[len - 2];
                     unsigned char second = str[len - 1];
 
                     if (workaround(first, second) == 1)       
                     {
                         str.erase(str.length()-2, 2);
-                        getyx(stdscr, y, x);
-                        move(y, x-1);
-                        delch();
+                        getyx(stdscr, y, x);                // координаты курсора на экране
+                        move(y, x-1);                       // сдвиг курсора 
+                        delch();                            // удаление символа
                     }
                     else                                   
                     {
                         str.erase(str.length()-1, 1);
-                        getyx(stdscr, y, x);
+                        getyx(stdscr, y, x);                // координаты курсора на экране
                         move(y, x-1);
                         delch();
                     }
@@ -368,7 +368,7 @@ string input_string(bool* flag_esc, string* arrows)    // Ввод строки
         else
         {
             str += ch;
-            addch(ch);
+            addch(ch);                              // вывод символа на экран
             if (ch >= 0xC0 && ch <= 0xDF)
             {                                       // если двухбайтовый символ
                 int next_ch = getch();              // считываем находящийся в буфере второй байт символа

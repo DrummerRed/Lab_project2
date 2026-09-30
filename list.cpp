@@ -353,9 +353,8 @@ string get_composition_and_authors(int index)
 
 void add_author_interface(int index)                // Интерфейс добавления авторов к произведению
 {
-    bool flag_esc = false;
-    bool symbol_flag = false;  
-    bool len_flag = false;                               
+    bool flag_esc = false;   
+    int flag_error = 0;                              
     while(!flag_esc)
     {
         composition* ptr = head_ptr;
@@ -382,21 +381,7 @@ void add_author_interface(int index)                // Интерфейс доб
                         printw(", ");
                 }
             }
-            printw("\n\n");
-
-            if (symbol_flag)
-            {
-                symbol_flag = false;
-                printw("Ошибка! Имя автора может содержать только:\n");
-                printw("- буквы латинского и русского алфавитов\n- знак пробела в виде разделителя\n\n");
-            }
-            else if (len_flag)
-            {
-                len_flag = false;
-                printw("Ошибка! Строка не должна содержать больше 40 символов!\n");
-            }
-
-            printw("Введите автора: ");
+            add_author_messages(&flag_error);
             string author = input_string(&flag_esc);
 
             if (flag_esc)
@@ -405,18 +390,35 @@ void add_author_interface(int index)                // Интерфейс доб
             {
                 author = delete_whitespaces(author);
                 if (count_symbols(author) > 40)
-                    len_flag = true;
+                    flag_error = 2;
                 else if (allowed_symb(author, "author") == 0) 
                 {
                     author = upper_symb(author);
                     add_author(index, author);
                 }
                 else 
-                    symbol_flag = true;
+                    flag_error = 1;
             }
         }
         refresh();
     }
+}
+
+void add_author_messages(int* flag_error)                       // Вывод диагностических сообщений
+{
+    printw("\n\n");
+    if (*flag_error == 1)
+    {
+        *flag_error = 0;
+        printw("Ошибка! Имя автора может содержать только:\n");
+        printw("- буквы латинского и русского алфавитов\n- знак пробела в виде разделителя\n\n");
+    }
+    else if (*flag_error == 2)
+    {
+        *flag_error = 0;
+        printw("Ошибка! Строка не должна содержать больше 40 символов!\n");
+    }
+    printw("Введите автора: ");
 }
 
 int print_compositions_with_authors(composition* ptr, int page)       // Вывод списка произведений с авторами на консоль
@@ -524,18 +526,7 @@ int delete_author_interface(composition* ptr)              // Вывод спи�
                 if (i != authors)
                     tmp_author_ptr = tmp_author_ptr->next_ptr;
             }
-            if (flag_error == 1)
-            {
-                printw("\nОшибка! Введена пустая строка!");
-                flag_error = 0;
-            }
-            if (flag_error == 2)
-            {
-                printw("\nОшибка! Некорректный ввод!");
-                flag_error = 0;
-            }
-
-            printw("\nДля удаления желаемого автора введите его номер: ");
+            delete_author_messages(&flag_error);
             string cash = input_string(&flag_esc);
             if (!flag_esc)
             {
@@ -558,6 +549,21 @@ int delete_author_interface(composition* ptr)              // Вывод спи�
         }
     }
     return 0; 
+}
+
+void delete_author_messages(int* flag_error)                           // Вывод диагностических сообщений
+{
+    if (*flag_error == 1)
+    {
+        printw("\nОшибка! Введена пустая строка!");
+        *flag_error = 0;
+    }
+    if (*flag_error == 2)
+    {
+        printw("\nОшибка! Некорректный ввод!");
+        *flag_error = 0;
+    }
+    printw("\nДля удаления желаемого автора введите его номер: ");
 }
 
 void delete_author(int index, composition* ptr)         // Удаление авторов

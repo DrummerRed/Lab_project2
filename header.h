@@ -29,6 +29,7 @@ void show_list();                                               // Вывод в
 void viewing_authors();                                         // Просмотр и удаление авторов  
 void search_authors(int index);                                 // Поиск авторов для заданного произведения
 int delete_author_interface(composition* ptr);                  // Вывод списка авторов произведения для удаления
+void delete_author_messages(int* flag_error);                   // Вывод диагностических сообщений
 void delete_author(int index, composition* ptr);                // Удаление авторов
 int count_authors(composition* ptr);                            // подсчет поличества авторов
 void clearing_list();                                           // Очистка списка
@@ -63,6 +64,7 @@ void record_or_viewing(string message_1, string message_2, void(*callback)(int),
 void record_authors();                                          // Ввод авторов (обновленная логика)
 void diagnostic_message(int* flag_error, string cash, int deleting = 0);          // Вывод диагностического сообщения на экран
 void add_author_interface(int index);                           // Интерфейс добавления авторов к произведению
+void add_author_messages(int* flag_error);                      // Вывод диагностических сообщений
 int allowed_symb(string str, string choice);                    // Проверка названия произведения или имени автора на допустимые символы
 int file_name_symb(string file_name);                           // Проверка названия файла на допустимые символы
 int numbers_symb(string number);                                // Проверка введенного номера на допустимые символы
