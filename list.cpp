@@ -180,10 +180,7 @@ void record_or_viewing(string message_1, string message_2, void(*callback)(int),
 
     while(!flag_esc)
     {
-        clear();
-        printw("Для возвращения нажмите Esc\n");
-        printw("---------------------------\n\n");
-
+        clear_and_print();
         composition* ptr = head_ptr;
         
         if (ptr == nullptr)
@@ -197,7 +194,7 @@ void record_or_viewing(string message_1, string message_2, void(*callback)(int),
         {
             cur_page = current_page(cur_page, arrow);                           // получение номера текущей страницы
             arrow = "";
-            int iterator = print_compositions_with_authors_2(ptr, cur_page);
+            int iterator = print_compositions_with_authors(ptr, cur_page);
 
             if (viewing_compositions)
                 diagnostic_message(&flag_error, cash_2, 1);
@@ -369,9 +366,7 @@ void add_author_interface(int index)                // Интерфейс доб
 
         if (index > 0)
         {
-            clear();
-            printw("Для возвращения нажмите Esc\n");
-            printw("---------------------------\n\n");
+            clear_and_print();
             printw("Произведение: %s\n", ptr->name.c_str());
             
             if (author_ptr == nullptr)
@@ -424,8 +419,8 @@ void add_author_interface(int index)                // Интерфейс доб
     }
 }
 
-int print_compositions_with_authors_2(composition* ptr, int page)       // Вывод списка произведений с авторами на консоль
-{                                                                       // Возвращает значение количества произведений в списке
+int print_compositions_with_authors(composition* ptr, int page)       // Вывод списка произведений с авторами на консоль
+{                                                                     // Возвращает значение количества произведений в списке
     int low_index = (page - 1) * COUNT_ON_PAGE + 1;
     int high_index = page * COUNT_ON_PAGE;
 
@@ -467,10 +462,7 @@ void show_list()                            // Вывод всего списк�
     int cur_page = 1;                                  
     while(ch != ESC)
     {
-        clear();
-        printw("Для возвращения нажмите Esc\n");
-        printw("---------------------------\n\n");
-
+        clear_and_print();
         composition* ptr = head_ptr;
         
         if (ptr == nullptr)
@@ -479,7 +471,7 @@ void show_list()                            // Вывод всего списк�
         else
         {
             cur_page = current_page(cur_page, transform_ch(ch));                // получение номера текущей страницы
-            print_compositions_with_authors_2(ptr, cur_page);
+            print_compositions_with_authors(ptr, cur_page);
         }
 
     ch = getch();
@@ -507,15 +499,12 @@ void search_authors(int index)                   // Поиск авторов д
 int delete_author_interface(composition* ptr)              // Вывод списка авторов произведения для удаления
 { 
     bool flag_esc = false;
-    bool flag_empty = false;
-    bool flag_error = false;                // сократить код!
+    int flag_error = 0;
     while(!flag_esc)
     {
         author* author_ptr = ptr->author_ptr;
         int authors = count_authors(ptr);
-        clear();
-        printw("Для возвращения нажмите Esc\n");
-        printw("---------------------------\n\n");
+        clear_and_print();
 
         if (authors == 0)
         {
@@ -535,15 +524,15 @@ int delete_author_interface(composition* ptr)              // Вывод спи�
                 if (i != authors)
                     tmp_author_ptr = tmp_author_ptr->next_ptr;
             }
-            if (flag_empty)
+            if (flag_error == 1)
             {
                 printw("\nОшибка! Введена пустая строка!");
-                flag_empty = false;
+                flag_error = 0;
             }
-            if (flag_error)
+            if (flag_error == 2)
             {
                 printw("\nОшибка! Некорректный ввод!");
-                flag_error = false;
+                flag_error = 0;
             }
 
             printw("\nДля удаления желаемого автора введите его номер: ");
@@ -551,7 +540,7 @@ int delete_author_interface(composition* ptr)              // Вывод спи�
             if (!flag_esc)
             {
                 if (cash == "")
-                    flag_empty = true;
+                    flag_error = 1;
                 else
                 {
                     if (numbers_symb(cash) == 0)
@@ -560,15 +549,15 @@ int delete_author_interface(composition* ptr)              // Вывод спи�
                         if ((index > 0) && (index <= authors))
                             delete_author(index, ptr);
                         else 
-                            flag_error = true;
+                            flag_error = 2;
                     }                                  
                     else                                
-                        flag_error = true;
+                        flag_error = 2;
                 }
             }
         }
     }
-    return 0; /////////////
+    return 0; 
 }
 
 void delete_author(int index, composition* ptr)         // Удаление авторов

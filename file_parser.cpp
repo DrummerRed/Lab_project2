@@ -60,9 +60,7 @@ string file_name_input()                            // Считывание им
     string file_name;
     while(!flag_esc)
     {
-        clear();
-        printw("Для возвращения нажмите Esc\n");
-        printw("---------------------------\n\n");
+        clear_and_print();
 
         if (checker == 1)
             printw("Ошибка! Файл с данным названием отсутствует!\n");
@@ -193,9 +191,7 @@ void interface_of_parsing(string file_name)                     // Функци�
     int ch = 0;
     while (ch != ESC)
     {
-        clear();
-        printw("Для возвращения нажмите Esc\n");
-        printw("---------------------------\n\n");
+        clear_and_print();
 
         if (result == 0)
             printw("Файл успешно считан");
@@ -217,10 +213,7 @@ string file_name_output()                            // Считывание и�
     string file_name;
     while (!flag_esc)
     {
-        clear();
-        printw("Для возвращения нажмите Esc\n");
-        printw("---------------------------\n\n");
-
+        clear_and_print();
         file_name_output_message(&checker, &flag_error);
         printw("Введите имя файла: ");
 
@@ -276,9 +269,7 @@ void file_creator_interface()                      // Меню создания 
 
     while(!flag_esc)
     {
-        clear();
-        printw("Для возвращения нажмите Esc\n");
-        printw("---------------------------\n\n");
+        clear_and_print();
 
         if (empty)                              // Список пуст
         {
@@ -305,9 +296,7 @@ void file_creator_interface()                      // Меню создания 
 
 void output_file_info(string file_name)                     // Вывод информации о записанном файле
 {
-    clear();
-    printw("Для возвращения нажмите Esc\n");
-    printw("---------------------------\n\n");
+    clear_and_print();
     
     char absolute_path[PATH_MAX];
     string dir_name = "";

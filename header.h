@@ -5,7 +5,6 @@
 #include <fstream>
 #include <unistd.h>         /////
 #include <limits.h>         // Для константы максимальной длины пути
-#include <iomanip>          // Для вывода информации в табличном виде
 #include <cwchar>
 #include <cwctype>
 
@@ -26,7 +25,6 @@ void viewing_compositions();
 int search_composition(string composition_name);                // Поиск заданного произведения
 void delete_composition(int index);
 void add_author(int index, string author_name);                 // Добавление автора
-// int print_compositions_with_authors(composition* ptr);          // Вывод списка произведений с авторами на консоль
 void show_list();                                               // Вывод всего списка
 void viewing_authors();                                         // Просмотр и удаление авторов  
 void search_authors(int index);                                 // Поиск авторов для заданного произведения
@@ -40,7 +38,7 @@ int count_symbols(string str);                                  // Подсче�
 int count_elems();                                              // Функция подсчета количества элементов (произведений) списка
 int pages_count();                                              // Подсчет количества страниц
 string transform_ch(int ch);                                    // Обратботка нажатия стрелок при использовании getch()
-int print_compositions_with_authors_2(composition* ptr, int page);       // удалить один из вариантов!!!
+int print_compositions_with_authors(composition* ptr, int page);   // Вывод списка произведений с авторами на консоль
 string get_composition_and_authors(int index);
 composition* get_ptr_by_index(int index);                       // Получение указателя на произведение по индексу
 int find_min(int index);                                        // Поиск минимального элемента
@@ -71,7 +69,7 @@ int numbers_symb(string number);                                // Провер�
 string delete_whitespaces(string str);                          // Удаление пробелов в начале и конце строки
 int interace_for_sorting();                                     // Отрисовка раздела "Сортировка произведений"
 void menu_for_sorting();                                        // Меню сортировки
-void clear_and_print();                                         // Вывод подсказки пользователя на экран
+void clear_and_print(int param=0);                              // Вывод подсказки пользователя на экран
 void interface_for_search_by_author();                          // Интерфейс раздела поиск по автору
 int compositions_by_author(string author_name, int* array=nullptr);                 // Поиск произведения по имени автора
 void print_branch(int index);                                   // Вывод названия произведения вместе с авторами

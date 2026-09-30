@@ -77,8 +77,7 @@ void Help()             // Функция работы пункта меню "П
 
         if (file == NULL)
         {
-            printw("Для возвращения в меню нажмите Esc\n");
-            printw("----------------------------------\n\n");
+            clear_and_print(1);
             printw("Ошибка: не удалось считать файл инструкций!\n");
             printw("Проверьте наличие файла help.txt в рабочей директории программы!");
         }
@@ -132,7 +131,7 @@ void Menu_start_work()                              // Меню пункта "Н
     }
 }
 
-int Menu_input_for_keyboard()                      // Меню ввода с клавиатуры
+int Menu_input_for_keyboard()                      // Меню режима "Ввод с клавиатуры"
 {
     int choice_input = 0;
     while(choice_input != -1)
@@ -145,18 +144,14 @@ int Menu_input_for_keyboard()                      // Меню ввода с к�
             if (composition == "")
                 continue;
         }
-        if (choice_input == 1)                      // Добавление авторов
-        {
+        else if (choice_input == 1)                      // Добавление авторов
             record_authors();
-        }
-        if (choice_input == 2)                      // Просмотр и удаление произведений 
-        {
+
+        else if (choice_input == 2)                      // Просмотр и удаление произведений 
             viewing_compositions();
-        }
-        if (choice_input == 3)                      // Просмотр и удаление авторов
-        {
+        
+        else if (choice_input == 3)                      // Просмотр и удаление авторов
             viewing_authors();
-        }
     }
     return choice_input;
 }
@@ -164,10 +159,8 @@ int Menu_input_for_keyboard()                      // Меню ввода с к�
 int choose_operating_mode(int index)                // Выбор режима работы программы
 {                                                   // Возвращает 0 при выборе "Ввод с клавиатуры",
     while(true)                                     // 1 при выборе "Чтение из файла", 2 при выборе "Сохранение в файл"
-    {                                               // 3 при выборе "Просмотр записей", -1 при нажатии Esc
-        clear();
-        printw("Для возвращения в меню нажмите Esc\n");
-        printw("----------------------------------\n\n");
+    {                                               // 3 при выборе "Сортировка произведений", -1 при нажатии Esc
+        clear_and_print(1);                         // 4 при выборе "Поиск по автору", 5 при "Просмотр записей"
         printw("Выберите режим работы:\n\n");
         string variants[6] = {"Ввод с клавиатуры", "Чтение из файла", "Сохранение в файл", "Сортировка произведений", "Поиск по автору", "Просмотр записей"};
         for (int i=0; i<6; i++)
@@ -205,10 +198,8 @@ int choose_input_mode(int index)                    // Выбор режима �
 {                                                   // Возвращает 0 при выборе "Добавление произведений"
     while(true)                                     // 1 при выборе "Добавление авторов"
     {                                               // 2 при выборе "Просмотр и удаление произведений
-        clear();                                    // 3 при выборе "Просмотр и удаление авторов"
-        printw("Для возвращения нажмите Esc\n");    // либо возвращает -1 при нажатии Esc
-        printw("---------------------------\n\n");
-        printw("Выберите:\n\n");
+        clear_and_print();                          // 3 при выборе "Просмотр и удаление авторов"
+        printw("Выберите:\n\n");                    // -1 при нажатии ESC
         string variants[4] = {"Добавление произведений", "Добавление авторов", "Просмотр и удаление произведений", "Просмотр и удаление авторов"};
         for (int i=0; i<4; i++)
         {
@@ -248,10 +239,7 @@ string record_composition()                           // Ввод названи
     string composition;                                     
     for (int i=0; flag_esc!=true; i++)
     {
-        clear();
-        printw("Для возвращения нажмите Esc\n");
-        printw("---------------------------\n\n");
-
+        clear_and_print();
         rec_composition_messages(&flag_error, composition, i);
         printw("Введите название произведения: ");
         composition = input_string(&flag_esc);
@@ -510,9 +498,7 @@ int interace_for_sorting()                         // Отрисовка раз�
 
     while (ch != ESC)
     {
-        clear();
-        printw("Для возвращения нажмите Esc\n");
-        printw("---------------------------\n\n");
+        clear_and_print();
 
         if (list_is_empty())
         {
@@ -523,7 +509,6 @@ int interace_for_sorting()                         // Отрисовка раз�
         else
         {
             printw("Выберите способ сортировки:\n\n");
-
             string variants[2] = {"По возрастанию", "По убыванию"};
             for (int i=0; i<2; i++)
             {
@@ -572,20 +557,26 @@ void menu_for_sorting()                                     // Меню сорт
         int ch = 0;
         while (ch != ESC)
         {
-            clear();
-            printw("Для возвращения нажмите Esc\n");
-            printw("---------------------------\n\n");
+            clear_and_print();
             printw("Список отсортирован %s.", variants[choice].c_str());
             ch = getch();
         }
     }
 }
 
-void clear_and_print()                      // Вывод подсказки пользователя на экран
+void clear_and_print(int param)                      // Вывод подсказки пользователя на экран
 {
     clear();
-    printw("Для возвращения нажмите Esc\n");
-    printw("---------------------------\n\n");
+    if (param == 0)
+    {
+        printw("Для возвращения нажмите Esc\n");
+        printw("---------------------------\n\n");
+    }
+    else
+    {
+        printw("Для возвращения в меню нажмите Esc\n");
+        printw("----------------------------------\n\n");
+    }
 }
 
 void interface_for_search_by_author()                 // Интерфейс раздела поиск по автору
