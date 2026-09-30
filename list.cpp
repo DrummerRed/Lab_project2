@@ -781,7 +781,52 @@ void descending_sort()                                           // Сортир
 //         delete_author(1, ptr);
 // }
 
-void compositions_by_author()
+int compositions_by_author(string author_name, int* array)                 // Поиск произведения по имени автора
 {
-    
+    composition* ptr = head_ptr;
+    author* author_ptr = nullptr;
+    int all_elems = count_elems();
+    int counter = 0;
+    for (int i=1; i<=all_elems; i++)
+    {
+        author_ptr = ptr->author_ptr;
+        while (author_ptr != nullptr)
+        {
+            if (author_ptr->name == author_name)
+            {
+                if (array != nullptr)
+                    array[counter] = i;
+                counter++;
+                break;
+            }
+            author_ptr = author_ptr->next_ptr;
+        }
+        ptr = ptr->next_ptr;
+    }
+    return counter;
+}
+
+void print_branch(int index)                         // Вывод названия произведения вместе с авторами 
+{
+    composition* ptr = head_ptr;
+    for (int i=1; i<index; i++)
+        ptr = ptr->next_ptr;
+
+    string composition_name = ptr->name;
+    printw("%s", composition_name.c_str());
+
+    author* author_ptr = ptr->author_ptr;
+    int number = 0;
+    while(author_ptr != nullptr)
+    {
+        number++;
+        string author_name = author_ptr->name;
+        if (number == 1)
+            printw(" - %s", author_name.c_str());
+        else
+            printw(", %s", author_name.c_str());
+
+        author_ptr = author_ptr->next_ptr;
+    }
+    printw("\n");
 }

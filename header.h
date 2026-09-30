@@ -72,7 +72,12 @@ string delete_whitespaces(string str);                          // Удален�
 int interace_for_sorting();                                     // Отрисовка раздела "Сортировка произведений"
 void menu_for_sorting();                                        // Меню сортировки
 void clear_and_print();                                         // Вывод подсказки пользователя на экран
-string interface_for_search_by_author();                        // Интерфейс раздела поиск по автору
+void interface_for_search_by_author();                          // Интерфейс раздела поиск по автору
+int compositions_by_author(string author_name, int* array=nullptr);                 // Поиск произведения по имени автора
+void print_branch(int index);                                   // Вывод названия произведения вместе с авторами
+void input_author_for_search();                                 // Ввод имени автора для поиска 
+void search_by_authors_messages(int* flag_error, string author);     // Вывод диагностических сообщений
+void print_authors_for_search(int elems, string author);             // Вывод записей произведений при поиске по автору
 
 void file_reader_interface();                                   // Выбор режима "Чтение из файла"
 string file_name_input();                                       // Считывание имени файла

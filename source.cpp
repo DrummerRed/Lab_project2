@@ -516,7 +516,7 @@ int interace_for_sorting()                         // Отрисовка раз�
 
         if (list_is_empty())
         {
-            printw("Записи о произведениях отсутствуют, сортировка недоступна!");
+            printw("Записи о произведениях отсутствуют, сортировка недоступна");
             index = -1;
             ch = getch();
         }
@@ -588,32 +588,70 @@ void clear_and_print()                      // Вывод подсказки п�
     printw("---------------------------\n\n");
 }
 
-string interface_for_search_by_author()                 // Интерфейс раздела поиск по автору
+void interface_for_search_by_author()                 // Интерфейс раздела поиск по автору
 {                                                       // возвращает имя автора, введенное пользователем
-    string author;                                      // при выходе по ESC возвращает пустую строку
-    int ch = 0;
+    int ch = 0;                                         // при выходе по ESC возвращает пустую строку
     if (list_is_empty())
     {
         while(ch != ESC)
         {
             clear_and_print();
-            printw("Записи о произведения отсутствуют, поиск недоступен!");
+            printw("Записи о произведения отсутствуют, поиск недоступен");
             ch = getch();
         }
     }
     else
+        input_author_for_search();
+}
+
+void input_author_for_search()               // Ввод имени автора для поиска
+{
+    string author;
+    bool flag_esc = false;
+    int flag_error = 0;
+    while (!flag_esc)
     {
-        bool flag_esc = false;
-        while (!flag_esc)
+        clear_and_print();
+        search_by_authors_messages(&flag_error, author);
+        printw("Введите имя автора: ");
+        author = input_string(&flag_esc);
+        if ((author != "") && (!flag_esc))        
         {
-            clear_and_print();
-            ///// diagnostic
-            ///// func of string
-            printw("Введите имя автора:");
-            author = input_string(&flag_esc);
-            // if (author != "")        // и если не включен флаг еsc
-                ///////
-        }
+            author = upper_symb(author);
+            int elems = compositions_by_author(author);
+            if (elems == 0)
+                flag_error = 1;
+            else
+            {
+                print_authors_for_search(elems, author);
+                flag_error = 0;
+            }
+        } 
+        else if (!flag_esc)
+            flag_error = 2;
+        refresh();
     }
-    return author;
+}
+
+void search_by_authors_messages(int* flag_error, string author)                 // Вывод диагностических сообщений
+{
+    if (*flag_error == 1)
+        printw("Произведения с автором %s не обнаружены\n", author.c_str());
+    else if (*flag_error == 2)
+        printw("Ошибка! Введена пустая строка!\n");
+}
+
+void print_authors_for_search(int elems, string author)             // Вывод записей произведений при поиске по автору
+{
+    int compositions[elems];
+    compositions_by_author(author, compositions);
+    int ch = 0;
+    while (ch != ESC)
+    {
+        clear_and_print();
+        printw("С автором %s были найдены следующие произведения:\n\n", author.c_str());
+        for (int i=0; i<elems; i++)
+            print_branch(compositions[i]);
+        ch = getch();
+    }
 }
